@@ -1,0 +1,18 @@
+categories:
+  - title: '🚀 Features'
+    label: 'feature'
+  - title: '🐛 Bugfixes'
+    label: 'bug'
+  - title: '🧰 Maintenance'
+    label: 'maintenance'
+  - title: '📦 Dependencies'
+    label: 'dependencies'
+  - title: '✏️ Documentation'
+    label: 'documentation'
+exclude-labels:
+  - 'skip-changelog'
+
+template: |
+  ## What's Changed
+
+  $CHANGES
