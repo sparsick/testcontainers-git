@@ -14,7 +14,7 @@
 
     <licenses>
         <license>
-            <name>MIT License/name>
+            <name>MIT License</name>
             <url>https://github.com/sparsick/testcontainers-git/blob/main/LICENSE</url>
             <distribution>repo</distribution>
         </license>
@@ -24,6 +24,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jgit.version>6.4.0.202211300538-r</jgit.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,19 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.24.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
+            <scope>test</scope>
+
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
+            <version>${jgit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
