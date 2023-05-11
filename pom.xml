@@ -75,6 +75,19 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal> <!-- add javaagent to surefire's test run  -->
+                            <goal>report</goal> <!-- optional option for generation test coverage report in html. Also needed by Sonarqube to show the test coverage in the dashboard -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
