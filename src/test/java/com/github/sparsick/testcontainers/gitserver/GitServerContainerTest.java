@@ -75,7 +75,7 @@ public class GitServerContainerTest {
 
         URI gitRepoURI = containerUnderTest.getGitRepoURI();
         var gitPort = containerUnderTest.getMappedPort(22);
-        assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@localhost:" + gitPort + "/srv/git/testRepoName.git");
+        assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/srv/git/testRepoName.git");
     }
 
     @Test
