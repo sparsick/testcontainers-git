@@ -51,6 +51,15 @@ public class GitServerContainerTest {
     }
 
     @Test
+    void getGitPassword() {
+        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38")).withGitPassword("password");
+
+        String gitPassword = containerUnderTest.getGitPassword();
+
+        assertThat(gitPassword).isEqualTo("password");
+    }
+
+    @Test
     void exposedPortIs22() {
         var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38"));
 

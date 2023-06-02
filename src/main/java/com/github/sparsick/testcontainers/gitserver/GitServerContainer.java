@@ -13,6 +13,7 @@ import java.net.URI;
  */
 public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
+    private static final String GIT_PASSWORD_KEY = "GIT_PASSWORD";
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
     private String gitRepoName = "testRepo";
 
@@ -34,7 +35,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
      * @return instance of the git server container
      */
     public GitServerContainer withGitPassword(String password) {
-        withEnv("GIT_PASSWORD", password);
+        withEnv(GIT_PASSWORD_KEY, password);
         return this;
     }
 
@@ -73,5 +74,9 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getGitPassword() {
+        return getEnvMap().get(GIT_PASSWORD_KEY);
     }
 }
