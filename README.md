@@ -1,6 +1,6 @@
 # testcontainers-git
 
-This project contains a [testcontainers]() implementation for a plain git server based on the Docker image `rockstorm/git-server` ([Github Project]()).
+This project contains a [Testcontainers](https://www.testcontainers.org/) implementation for a plain git server based on the Docker image `rockstorm/git-server` ([Github Project](https://github.com/rockstorm101/git-server-docker)).
 
 It sets up the git server with a ready to use repository with the default name `testRepo`. 
 The repository name can be overwritten.
