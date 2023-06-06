@@ -77,6 +77,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     }
 
     public String getGitPassword() {
-        return getEnvMap().get(GIT_PASSWORD_KEY);
+        var password = getEnvMap().get(GIT_PASSWORD_KEY);
+        return password != null ? password : "12345";
     }
 }
