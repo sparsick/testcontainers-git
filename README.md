@@ -14,7 +14,7 @@ The access is via a password (Default: `12345`, can also be overwritten).
 **Maven:**
 ```xml
  <dependency>
-    <groupId>com.github.sparsick.testcontainers.gitserver</groupId>
+    <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
     <version>0.1.0</version>
     <scope>test</scope>
@@ -24,7 +24,7 @@ The access is via a password (Default: `12345`, can also be overwritten).
 **Gradle:**
 ```groovy
 dependencies {
-    testImplementation 'com.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.1.0'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.1.0'
 }
 ```
 
