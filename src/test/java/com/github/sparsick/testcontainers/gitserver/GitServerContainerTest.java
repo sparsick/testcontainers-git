@@ -1,12 +1,8 @@
 package com.github.sparsick.testcontainers.gitserver;
 
-import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.net.Host;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.TransportConfigCallback;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.SshTransport;
-import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
 import org.junit.jupiter.api.Test;
@@ -82,7 +78,7 @@ public class GitServerContainerTest {
 
         containerUnderTest.start();
 
-        URI gitRepoURI = containerUnderTest.getGitRepoURI();
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
         var gitPort = containerUnderTest.getMappedPort(22);
         assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/srv/git/testRepoName.git");
     }
@@ -93,7 +89,7 @@ public class GitServerContainerTest {
 
         containerUnderTest.start();
 
-        URI gitRepoURI = containerUnderTest.getGitRepoURI();
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
         assertThatNoException().isThrownBy(() ->
                 Git.cloneRepository()

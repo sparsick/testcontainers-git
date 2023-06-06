@@ -58,7 +58,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
      *
      * @return SSH URI
      */
-    public URI getGitRepoURI() {
+    public URI getGitRepoURIAsSSH() {
 
         return URI.create("ssh://git@"+ getHost() + ":" + getMappedPort(22) + "/srv/git/" + gitRepoName + ".git");
     }

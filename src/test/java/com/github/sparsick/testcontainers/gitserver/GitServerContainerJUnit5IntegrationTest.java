@@ -29,7 +29,7 @@ public class GitServerContainerJUnit5IntegrationTest {
 
     @Test
     void cloneGitRepo() {
-        URI gitRepoURI = containerUnderTest.getGitRepoURI();
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
         assertThatNoException().isThrownBy(() ->
                 Git.cloneRepository()
@@ -41,7 +41,7 @@ public class GitServerContainerJUnit5IntegrationTest {
                             sshTransport.setSshSessionFactory(new JschConfigSessionFactory() {
                                 @Override
                                 protected void configure(OpenSshConfig.Host hc, Session session) {
-                                    session.setPassword("12345");
+                                    session.setPassword(containerUnderTest.getGitPassword());
                                     session.setConfig("StrictHostKeyChecking", "no");
                                 }
                             });
