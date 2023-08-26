@@ -80,6 +80,13 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         }
     }
 
+    /**
+     * Return the Git Password that was set with the method {@code withGitPassword}.
+     *
+     * If no password was set, the default "12345" is returned.
+     *
+     * @return the git password
+     */
     public String getGitPassword() {
         var password = getEnvMap().get(GIT_PASSWORD_KEY);
         return password != null ? password : "12345";
