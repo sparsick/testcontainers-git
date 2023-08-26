@@ -24,7 +24,11 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     public GitServerContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
         dockerImageName.assertCompatibleWith(DEFAULT_DOCKER_IMAGE_NAME);
-        waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1)).addExposedPorts(22);
+        if ("2.38".compareTo(dockerImageName.getVersionPart()) <= 0 ) {
+            waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1)).addExposedPorts(22);
+        } else {
+            withExposedPorts(22);
+        }
     }
 
     /**
@@ -76,6 +80,13 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         }
     }
 
+    /**
+     * Return the Git Password that was set with the method {@code withGitPassword}.
+     *
+     * If no password was set, the default "12345" is returned.
+     *
+     * @return the git password
+     */
     public String getGitPassword() {
         var password = getEnvMap().get(GIT_PASSWORD_KEY);
         return password != null ? password : "12345";

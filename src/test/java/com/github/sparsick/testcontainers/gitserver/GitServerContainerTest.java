@@ -7,6 +7,9 @@ import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.testcontainers.shaded.com.github.dockerjava.core.DockerContextMetaFile;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
@@ -63,9 +66,10 @@ public class GitServerContainerTest {
         assertThat(exposedPorts).containsOnly(22);
     }
 
-    @Test
-    void containerStarted() {
-        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38"));
+    @ParameterizedTest
+    @ArgumentsSource(SupportedGitServerImages.class)
+    void containerStarted(DockerImageName dockerImageName) {
+        var containerUnderTest = new GitServerContainer(dockerImageName);
 
         containerUnderTest.start();
 
@@ -83,9 +87,10 @@ public class GitServerContainerTest {
         assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/srv/git/testRepoName.git");
     }
 
-    @Test
-    void setupGitRepo() {
-        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38")).withGitRepo("testRepoName");
+    @ParameterizedTest
+    @ArgumentsSource(SupportedGitServerImages.class)
+    void setupGitRepo(DockerImageName dockerImageName) {
+        var containerUnderTest = new GitServerContainer(dockerImageName).withGitRepo("testRepoName");
 
         containerUnderTest.start();
 
