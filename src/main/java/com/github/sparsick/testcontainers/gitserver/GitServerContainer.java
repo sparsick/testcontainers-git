@@ -24,7 +24,11 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     public GitServerContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
         dockerImageName.assertCompatibleWith(DEFAULT_DOCKER_IMAGE_NAME);
-        waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1)).addExposedPorts(22);
+        if ("2.38".compareTo(dockerImageName.getVersionPart()) <= 0 ) {
+            waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1)).addExposedPorts(22);
+        } else {
+            withExposedPorts(22);
+        }
     }
 
     /**
