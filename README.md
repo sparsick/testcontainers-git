@@ -9,7 +9,7 @@ It sets up the git server with a ready to use repository with the default name `
 The repository name can be overwritten.
 As default this git repository would be exposed as a SSH URI. 
 The port is set by testcontainers' mechanism.
-The access is via a password (Default: `12345`, can also be overwritten).
+The access is via a password (Default: `12345`, can also be overwritten) or SSH public key that is given by the container instance.
 
 ## Add me as Dependency
 
@@ -19,7 +19,7 @@ The access is via a password (Default: `12345`, can also be overwritten).
  <dependency>
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -27,7 +27,7 @@ The access is via a password (Default: `12345`, can also be overwritten).
 **Gradle:**
 ```groovy
 dependencies {
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.1.0'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.2.0'
 }
 ```
 
@@ -42,16 +42,20 @@ public class GitServerContainerUsedInJUnit5Test {
 
     @Container
     private GitServerContainer containerUnderTest = 
-            new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38"))
+            new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.40"))
                     .withGitRepo("testRepo") // overwrite the default git repository name
-                    .withGitPassword("12345"); // overwrite the default git password
+                    .withGitPassword("12345") // overwrite the default git password
+                    .withSshKeyAuth(); // enabled public key authentication 
 
     @Test
     void checkInteractWithTheContainer() {
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH(); 
         String gitPassword = containerUnderTest.getGitPassword();
-        
-        
+        SshIdentity sshIdentity = containerUnderTest.getSshClientIdentity();
+
+
+
+
         // check interaction
 
     }
