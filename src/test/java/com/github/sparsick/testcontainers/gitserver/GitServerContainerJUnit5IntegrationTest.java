@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 public class GitServerContainerJUnit5IntegrationTest {
 
     @Container
-    private GitServerContainer containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38"));
+    private GitServerContainer containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server"));
 
     @TempDir
     private File tempDir;

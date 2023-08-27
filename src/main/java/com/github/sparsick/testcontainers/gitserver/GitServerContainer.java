@@ -1,6 +1,7 @@
 package com.github.sparsick.testcontainers.gitserver;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
@@ -16,6 +17,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     private static final String GIT_PASSWORD_KEY = "GIT_PASSWORD";
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
     private String gitRepoName = "testRepo";
+    private SshIdentity sshClientIdentity;
 
     /**
      *
@@ -29,6 +31,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         } else {
             withExposedPorts(22);
         }
+        withCommand("/usr/sbin/sshd", "-D", "-e");
     }
 
     /**
@@ -54,6 +57,28 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
      */
     public GitServerContainer withGitRepo(String gitRepoName) {
         this.gitRepoName = gitRepoName;
+        return this;
+    }
+
+    /**
+     * Enabled SSH public key authentication.
+     *
+     * @return instance of the git server container
+     */
+    public GitServerContainer withSshKeyAuth() {
+        try {
+             sshClientIdentity = new SshIdentity(
+                     this.getClass().getClassLoader().getResourceAsStream("id_client").readAllBytes(),
+                     this.getClass().getClassLoader().getResourceAsStream("id_client.pub").readAllBytes(),
+                     new byte[0]);
+
+            withClasspathResourceMapping("id_client.pub", "/home/git/.ssh/authorized_keys", BindMode.READ_ONLY);
+            withClasspathResourceMapping("sshd_config", "/etc/ssh/sshd_config", BindMode.READ_ONLY);
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 
@@ -90,5 +115,16 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     public String getGitPassword() {
         var password = getEnvMap().get(GIT_PASSWORD_KEY);
         return password != null ? password : "12345";
+    }
+
+    /**
+     * Return the identity information for public key authentication.
+     *
+     * If {@code withSshKeyAuth} was not called, then it returns null.
+     *
+     * @return identity information for a public key authentication
+     */
+    public SshIdentity getSshClientIdentity() {
+        return sshClientIdentity;
     }
 }
