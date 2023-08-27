@@ -17,7 +17,6 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     private static final String GIT_PASSWORD_KEY = "GIT_PASSWORD";
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
     private String gitRepoName = "testRepo";
-    private boolean sshKeyAuthEnabled = false;
     private SshIdentity sshClientIdentity;
 
     /**
@@ -113,6 +112,13 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         return password != null ? password : "12345";
     }
 
+    /**
+     * Return the identity information for public key authentication.
+     *
+     * If {@code withSshKeyAuth} was not called, then it returns null.
+     *
+     * @return identity information for a public key authentication
+     */
     public SshIdentity getSshClientIdentity() {
         return sshClientIdentity;
     }
