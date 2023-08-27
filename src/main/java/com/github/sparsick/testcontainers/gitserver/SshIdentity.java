@@ -8,6 +8,13 @@ public class SshIdentity {
     private byte[] publicKey;
     private byte[] passphrase;
 
+    /**
+     * Identity information for a public key authentication.
+     *
+     * @param privateKey SSH private key
+     * @param publicKey SSH public key
+     * @param passphrase password for private key
+     */
     public SshIdentity(byte[] privateKey, byte[] publicKey, byte[] passphrase) {
         this.privateKey = privateKey;
         this.publicKey = publicKey;

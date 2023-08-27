@@ -60,6 +60,11 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         return this;
     }
 
+    /**
+     * Enabled SSH public key authentication.
+     *
+     * @return instance of the git server container
+     */
     public GitServerContainer withSshKeyAuth() {
         try {
              sshClientIdentity = new SshIdentity(
