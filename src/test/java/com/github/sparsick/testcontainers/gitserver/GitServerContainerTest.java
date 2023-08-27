@@ -1,10 +1,13 @@
 package com.github.sparsick.testcontainers.gitserver;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
+import org.eclipse.jgit.util.FS;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -107,6 +110,44 @@ public class GitServerContainerTest {
                                 @Override
                                 protected void configure(OpenSshConfig.Host hc, Session session) {
                                     session.setPassword("12345");
+                                    session.setConfig("StrictHostKeyChecking", "no");
+                                }
+                            });
+                        })
+                        .call()
+        );
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(SupportedGitServerImages.class)
+    void pubKeyAuth(DockerImageName dockerImageName) {
+        var containerUnderTest = new GitServerContainer(dockerImageName).withSshKeyAuth();
+
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+
+        assertThatNoException().isThrownBy(() ->
+                Git.cloneRepository()
+                        .setURI(gitRepoURI.toString())
+                        .setDirectory(tempDir)
+                        .setBranch("main")
+                        .setTransportConfigCallback(transport -> {
+                            var sshTransport = (SshTransport) transport;
+                            sshTransport.setSshSessionFactory(new JschConfigSessionFactory() {
+
+                                @Override
+                                protected JSch createDefaultJSch(FS fs ) throws JSchException {
+                                    JSch defaultJSch = super.createDefaultJSch( fs );
+                                    SshIdentity sshIdentity = containerUnderTest.getSshClientIdentity();
+                                    byte[] privateKey = sshIdentity.getPrivateKey();
+                                    byte[] publicKey = sshIdentity.getPublicKey();
+                                    byte[] passphrase = sshIdentity.getPassphrase();
+                                    defaultJSch.addIdentity("git-server", privateKey, publicKey, passphrase);
+                                    return defaultJSch;
+                                }
+                                @Override
+                                protected void configure(OpenSshConfig.Host hc, Session session) {
                                     session.setConfig("StrictHostKeyChecking", "no");
                                 }
                             });
