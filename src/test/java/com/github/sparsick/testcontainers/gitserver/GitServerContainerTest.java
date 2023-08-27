@@ -11,8 +11,7 @@ import org.eclipse.jgit.util.FS;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.testcontainers.shaded.com.github.dockerjava.core.DockerContextMetaFile;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
@@ -70,9 +69,9 @@ public class GitServerContainerTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(SupportedGitServerImages.class)
-    void containerStarted(DockerImageName dockerImageName) {
-        var containerUnderTest = new GitServerContainer(dockerImageName);
+    @EnumSource(GitServerVersions.class)
+    void containerStarted(GitServerVersions gitServer) {
+        var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName());
 
         containerUnderTest.start();
 
@@ -91,9 +90,9 @@ public class GitServerContainerTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(SupportedGitServerImages.class)
-    void setupGitRepo(DockerImageName dockerImageName) {
-        var containerUnderTest = new GitServerContainer(dockerImageName).withGitRepo("testRepoName");
+    @EnumSource(GitServerVersions.class)
+    void setupGitRepo(GitServerVersions gitServer) {
+        var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName()).withGitRepo("testRepoName");
 
         containerUnderTest.start();
 
@@ -119,9 +118,9 @@ public class GitServerContainerTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(SupportedGitServerImages.class)
-    void pubKeyAuth(DockerImageName dockerImageName) {
-        var containerUnderTest = new GitServerContainer(dockerImageName).withSshKeyAuth();
+    @EnumSource(GitServerVersions.class)
+    void pubKeyAuth(GitServerVersions gitServer) {
+        var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName()).withSshKeyAuth();
 
         containerUnderTest.start();
 

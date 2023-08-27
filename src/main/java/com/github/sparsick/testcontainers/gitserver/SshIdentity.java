@@ -17,7 +17,7 @@ public class SshIdentity {
     /**
      * SSH private key
      *
-     * @return
+     * @return SSH private key
      */
     public byte[] getPrivateKey() {
         return privateKey;
@@ -26,7 +26,7 @@ public class SshIdentity {
     /**
      * SSH public key
      *
-     * @return
+     * @return  SSH public key
      */
     public byte[] getPublicKey() {
         return publicKey;
@@ -35,7 +35,7 @@ public class SshIdentity {
     /**
      * Password for the SSH private key
      *
-     * @return
+     * @return Password for the SSH private key
      */
     public byte[] getPassphrase() {
         return passphrase;
