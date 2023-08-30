@@ -1,5 +1,6 @@
 package com.github.sparsick.testcontainers.gitserver;
 
+import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -138,11 +139,7 @@ public class GitServerContainerTest {
                                 @Override
                                 protected JSch createDefaultJSch(FS fs ) throws JSchException {
                                     JSch defaultJSch = super.createDefaultJSch( fs );
-                                    SshIdentity sshIdentity = containerUnderTest.getSshClientIdentity();
-                                    byte[] privateKey = sshIdentity.getPrivateKey();
-                                    byte[] publicKey = sshIdentity.getPublicKey();
-                                    byte[] passphrase = sshIdentity.getPassphrase();
-                                    defaultJSch.addIdentity("git-server", privateKey, publicKey, passphrase);
+                                    configureSshIdentity(defaultJSch, containerUnderTest);
                                     return defaultJSch;
                                 }
                                 @Override
@@ -153,5 +150,51 @@ public class GitServerContainerTest {
                         })
                         .call()
         );
+    }
+
+    @ParameterizedTest
+    @EnumSource(GitServerVersions.class)
+    void strictHostKeyVerifivation(GitServerVersions gitServer) {
+        var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName()).withSshKeyAuth();
+
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+
+        assertThatNoException().isThrownBy(() ->
+                Git.cloneRepository()
+                        .setURI(gitRepoURI.toString())
+                        .setDirectory(tempDir)
+                        .setBranch("main")
+                        .setTransportConfigCallback(transport -> {
+                            var sshTransport = (SshTransport) transport;
+                            sshTransport.setSshSessionFactory(new JschConfigSessionFactory() {
+
+                                @Override
+                                protected JSch createDefaultJSch(FS fs ) throws JSchException {
+                                    JSch defaultJSch = super.createDefaultJSch( fs );
+                                    configureSshIdentity(defaultJSch, containerUnderTest);
+                                    configureHostKeyRepository(defaultJSch, containerUnderTest);
+                                    return defaultJSch;
+                                }
+                            });
+                        })
+                        .call()
+        );
+    }
+
+    private void configureSshIdentity(JSch defaultJSch, GitServerContainer containerUnderTest) throws JSchException {
+        SshIdentity sshIdentity = containerUnderTest.getSshClientIdentity();
+        byte[] privateKey = sshIdentity.getPrivateKey();
+        byte[] publicKey = sshIdentity.getPublicKey();
+        byte[] passphrase = sshIdentity.getPassphrase();
+        defaultJSch.addIdentity("git-server", privateKey, publicKey, passphrase);
+    }
+
+    private void configureHostKeyRepository(JSch defaultJSch, GitServerContainer containerUnderTest) throws JSchException {
+        SshHostKey hostKey = containerUnderTest.getHostKey();
+        String host = hostKey.getHostname();
+        byte[] key = hostKey.getKey();
+        defaultJSch.getHostKeyRepository().add(new HostKey(host, key), null);
     }
 }
