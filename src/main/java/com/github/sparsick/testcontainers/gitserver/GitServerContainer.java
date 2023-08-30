@@ -8,6 +8,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Base64;
 
 /**
  * Container for a plain Git Server based on the Docker image "rockstorm/git-server".
@@ -18,6 +19,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
     private String gitRepoName = "testRepo";
     private SshIdentity sshClientIdentity;
+    private SshHostKey hostKey;
 
     /**
      *
@@ -100,6 +102,11 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
             execInContainer("mkdir", "-p", gitRepoPath);
             execInContainer("git", "init", "--bare", gitRepoPath);
             execInContainer("chown", "-R", "git:git", "/srv");
+
+            ExecResult result = execInContainer("cat", "/etc/ssh/ssh_host_ecdsa_key.pub");
+            String[] catResult = result.getStdout().split(" ");
+            hostKey = new SshHostKey("localhost", Base64.getDecoder().decode(catResult[1]));
+
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -126,5 +133,14 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
      */
     public SshIdentity getSshClientIdentity() {
         return sshClientIdentity;
+    }
+
+    /**
+     * Return the public host key information.
+     *
+     * @return public host key
+     */
+    public SshHostKey getHostKey() {
+        return hostKey;
     }
 }
