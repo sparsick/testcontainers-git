@@ -105,7 +105,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
             ExecResult result = execInContainer("cat", "/etc/ssh/ssh_host_ecdsa_key.pub");
             String[] catResult = result.getStdout().split(" ");
-            hostKey = new SshHostKey("localhost", Base64.getDecoder().decode(catResult[1]));
+            hostKey = new SshHostKey(getHost(), Base64.getDecoder().decode(catResult[1]));
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
