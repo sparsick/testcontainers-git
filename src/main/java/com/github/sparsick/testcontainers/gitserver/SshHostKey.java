@@ -38,25 +38,4 @@ public class SshHostKey {
     public String getHostname() {
         return hostname;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SshHostKey)) return false;
-        SshHostKey hostKey = (SshHostKey) o;
-        return Objects.equals(key, hostKey.key) && Objects.equals(hostname, hostKey.hostname);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(key, hostname);
-    }
-
-    @Override
-    public String toString() {
-        return "HostKey{" +
-                "key='" + key + '\'' +
-                ", hostname='" + hostname + '\'' +
-                '}';
-    }
 }
