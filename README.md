@@ -51,11 +51,16 @@ public class GitServerContainerUsedInJUnit5Test {
     void checkInteractWithTheContainer() {
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH(); 
         String gitPassword = containerUnderTest.getGitPassword();
+
         SshIdentity sshIdentity = containerUnderTest.getSshClientIdentity();
-
-
-
-
+        byte[] privateKey = sshIdentity.getPrivateKey();
+        byte[] publicKey = sshIdentity.getPublicKey();
+        byte[] passphrase = sshIdentity.getPassphrase();
+        
+        SshHostKey hostKey = containerUnderTest.getHostKey();
+        String host = hostKey.getHostname();
+        byte[] key = hostKey.getKey();
+        
         // check interaction
 
     }
