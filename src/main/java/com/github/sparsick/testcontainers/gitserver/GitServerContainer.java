@@ -24,13 +24,12 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     private SshHostKey hostKey;
 
     /**
-     *
      * @param dockerImageName - name of the docker image
      */
     public GitServerContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
         dockerImageName.assertCompatibleWith(DEFAULT_DOCKER_IMAGE_NAME);
-        if ("2.38".compareTo(dockerImageName.getVersionPart()) <= 0 ) {
+        if ("2.38".compareTo(dockerImageName.getVersionPart()) <= 0) {
             waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1)).addExposedPorts(22);
         } else {
             withExposedPorts(22);
@@ -40,8 +39,9 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
     /**
      * Override the default git password.
-     *
+     * <p>
      * Default password is 12345
+     *
      * @param password - git password
      * @return instance of the git server container
      */
@@ -53,7 +53,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
     /**
      * Override the default git repository name.
-     *
+     * <p>
      * Default name is "testRepo"
      *
      * @param gitRepoName -  name of the git repository that is created by default
@@ -71,10 +71,10 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
      */
     public GitServerContainer withSshKeyAuth() {
         try {
-             sshClientIdentity = new SshIdentity(
-                     this.getClass().getClassLoader().getResourceAsStream("id_client").readAllBytes(),
-                     this.getClass().getClassLoader().getResourceAsStream("id_client.pub").readAllBytes(),
-                     new byte[0]);
+            sshClientIdentity = new SshIdentity(
+                    this.getClass().getClassLoader().getResourceAsStream("id_client").readAllBytes(),
+                    this.getClass().getClassLoader().getResourceAsStream("id_client.pub").readAllBytes(),
+                    new byte[0]);
 
             withClasspathResourceMapping("id_client.pub", "/home/git/.ssh/authorized_keys", BindMode.READ_ONLY);
             withClasspathResourceMapping("sshd_config", "/etc/ssh/sshd_config", BindMode.READ_ONLY);
@@ -88,7 +88,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
     /**
      * Copy an existing git repository to the container.
-     *
+     * <p>
      * The git repository is copied to the container and the git repository is initialized as bare repository.
      *
      * @param pathtoExistingRepo - path to the existing git repository. The path is relative to the project root.
@@ -106,36 +106,46 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
      */
     public URI getGitRepoURIAsSSH() {
 
-        return URI.create("ssh://git@"+ getHost() + ":" + getMappedPort(22) + "/srv/git/" + gitRepoName + ".git");
+        return URI.create("ssh://git@" + getHost() + ":" + getMappedPort(22) + "/srv/git/" + gitRepoName + ".git");
     }
 
     @Override
     protected void containerIsStarted(InspectContainerResponse containerInfo) {
         super.containerIsStarted(containerInfo);
+            configureGitRepository();
+            collectHostKeyInformation();
+    }
+
+    private void collectHostKeyInformation() {
+        try {
+            ExecResult result = execInContainer("cat", "/etc/ssh/ssh_host_ecdsa_key.pub");
+            String[] catResult = result.getStdout().split(" ");
+            hostKey = new SshHostKey(getHost(), Base64.getDecoder().decode(catResult[1]));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Could not collect host key information", e);
+        }
+    }
+
+    private void configureGitRepository() {
         try {
             String gitRepoPath = String.format("/srv/git/%s.git", gitRepoName);
-            if(pathToExistingRepo != null) {
+            if (pathToExistingRepo != null) {
                 copyFileToContainer(MountableFile.forHostPath(pathToExistingRepo + "/.git"), gitRepoPath);
-                execInContainer("git" ,"config", "--bool", "core.bare", "true", gitRepoPath);
+                execInContainer("git", "config", "--bool", "core.bare", "true", gitRepoPath);
                 execInContainer("chown", "-R", "git:git", "/srv");
             } else {
                 execInContainer("mkdir", "-p", gitRepoPath);
                 execInContainer("git", "init", "--bare", gitRepoPath);
                 execInContainer("chown", "-R", "git:git", "/srv");
             }
-
-            ExecResult result = execInContainer("cat", "/etc/ssh/ssh_host_ecdsa_key.pub");
-            String[] catResult = result.getStdout().split(" ");
-            hostKey = new SshHostKey(getHost(), Base64.getDecoder().decode(catResult[1]));
-
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Configure Git repository failed",e);
         }
     }
 
     /**
      * Return the Git Password that was set with the method {@code withGitPassword}.
-     *
+     * <p>
      * If no password was set, the default "12345" is returned.
      *
      * @return the git password
@@ -147,7 +157,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
     /**
      * Return the identity information for public key authentication.
-     *
+     * <p>
      * If {@code withSshKeyAuth} was not called, then it returns null.
      *
      * @return identity information for a public key authentication
