@@ -86,6 +86,14 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         return this;
     }
 
+    /**
+     * Copy an existing git repository to the container.
+     *
+     * The git repository is copied to the container and the git repository is initialized as bare repository.
+     *
+     * @param pathtoExistingRepo - path to the existing git repository. The path is relative to the project root.
+     * @return instance of the git server container
+     */
     public GitServerContainer withCopyExistingGitRepoToContainer(String pathtoExistingRepo) {
         this.pathToExistingRepo = pathtoExistingRepo;
         return this;
