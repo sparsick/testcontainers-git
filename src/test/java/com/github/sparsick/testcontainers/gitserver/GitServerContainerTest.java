@@ -92,6 +92,64 @@ public class GitServerContainerTest {
         assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/srv/git/testRepoName.git");
     }
 
+    @Test
+    void copyExistingGitRepo() {
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION).withCopyExistingGitRepoToContainer("src/test/resources/existingRepo");
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+
+        assertThatNoException().isThrownBy(() ->
+                Git.cloneRepository()
+                        .setURI(gitRepoURI.toString())
+                        .setDirectory(tempDir)
+                        .setBranch("main")
+                        .setTransportConfigCallback(transport -> {
+                            var sshTransport = (SshTransport) transport;
+                            sshTransport.setSshSessionFactory(new JschConfigSessionFactory() {
+                                @Override
+                                protected void configure(OpenSshConfig.Host hc, Session session) {
+                                    session.setPassword("12345");
+                                    session.setConfig("StrictHostKeyChecking", "no");
+                                }
+                            });
+                        })
+                        .call()
+        );
+
+        assertThat(new File(tempDir, "testFile")).exists();
+    }
+
+    @Test
+    void copyExistingGitRepoWithCustomRepoName() {
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION)
+                .withGitRepo("customRepoName")
+                .withCopyExistingGitRepoToContainer("src/test/resources/existingRepo");
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+
+        assertThatNoException().isThrownBy(() ->
+                Git.cloneRepository()
+                        .setURI(gitRepoURI.toString())
+                        .setDirectory(tempDir)
+                        .setBranch("main")
+                        .setTransportConfigCallback(transport -> {
+                            var sshTransport = (SshTransport) transport;
+                            sshTransport.setSshSessionFactory(new JschConfigSessionFactory() {
+                                @Override
+                                protected void configure(OpenSshConfig.Host hc, Session session) {
+                                    session.setPassword("12345");
+                                    session.setConfig("StrictHostKeyChecking", "no");
+                                }
+                            });
+                        })
+                        .call()
+        );
+
+        assertThat(new File(tempDir, "testFile")).exists();
+    }
+
     @ParameterizedTest
     @EnumSource(GitServerVersions.class)
     void setupGitRepo(GitServerVersions gitServer) {

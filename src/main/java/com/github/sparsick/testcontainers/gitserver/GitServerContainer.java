@@ -5,6 +5,7 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,6 +19,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     private static final String GIT_PASSWORD_KEY = "GIT_PASSWORD";
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
     private String gitRepoName = "testRepo";
+    private String pathToExistingRepo;
     private SshIdentity sshClientIdentity;
     private SshHostKey hostKey;
 
@@ -84,6 +86,11 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         return this;
     }
 
+    public GitServerContainer withCopyExistingGitRepoToContainer(String pathtoExistingRepo) {
+        this.pathToExistingRepo = pathtoExistingRepo;
+        return this;
+    }
+
     /**
      * Return the SSH URI for git repo.
      *
@@ -99,9 +106,15 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         super.containerIsStarted(containerInfo);
         try {
             String gitRepoPath = String.format("/srv/git/%s.git", gitRepoName);
-            execInContainer("mkdir", "-p", gitRepoPath);
-            execInContainer("git", "init", "--bare", gitRepoPath);
-            execInContainer("chown", "-R", "git:git", "/srv");
+            if(pathToExistingRepo != null) {
+                copyFileToContainer(MountableFile.forHostPath(pathToExistingRepo + "/.git"), gitRepoPath);
+                execInContainer("git" ,"config", "--bool", "core.bare", "true", gitRepoPath);
+                execInContainer("chown", "-R", "git:git", "/srv");
+            } else {
+                execInContainer("mkdir", "-p", gitRepoPath);
+                execInContainer("git", "init", "--bare", gitRepoPath);
+                execInContainer("chown", "-R", "git:git", "/srv");
+            }
 
             ExecResult result = execInContainer("cat", "/etc/ssh/ssh_host_ecdsa_key.pub");
             String[] catResult = result.getStdout().split(" ");
@@ -143,4 +156,5 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     public SshHostKey getHostKey() {
         return hostKey;
     }
+
 }
