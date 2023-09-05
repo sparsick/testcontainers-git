@@ -27,13 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitServerContainerTest {
 
+    private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_40.getDockerImageName();
     @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
 
     @Test
     void validDockerImageName() {
         assertThatNoException().isThrownBy(() ->
-                new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38"))
+                new GitServerContainer(LATEST_GIT_SERVER_VERSION)
         );
     }
 
@@ -46,7 +47,7 @@ public class GitServerContainerTest {
 
     @Test
     void gitPasswordIsSet() {
-        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38")).withGitPassword("password");
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION).withGitPassword("password");
 
         Map<String, String> envMap = containerUnderTest.getEnvMap();
 
@@ -55,7 +56,7 @@ public class GitServerContainerTest {
 
     @Test
     void getGitPassword() {
-        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38")).withGitPassword("password");
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION).withGitPassword("password");
 
         String gitPassword = containerUnderTest.getGitPassword();
 
@@ -64,7 +65,7 @@ public class GitServerContainerTest {
 
     @Test
     void exposedPortIs22() {
-        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38"));
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION);
 
         List<Integer> exposedPorts = containerUnderTest.getExposedPorts();
         assertThat(exposedPorts).containsOnly(22);
@@ -82,7 +83,7 @@ public class GitServerContainerTest {
 
     @Test
     void gitRepoURI() {
-        var containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.38")).withGitRepo("testRepoName");
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION).withGitRepo("testRepoName");
 
         containerUnderTest.start();
 
