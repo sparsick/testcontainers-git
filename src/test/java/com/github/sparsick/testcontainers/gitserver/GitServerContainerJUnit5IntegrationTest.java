@@ -6,6 +6,7 @@ import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -23,7 +24,7 @@ public class GitServerContainerJUnit5IntegrationTest {
     @Container
     private GitServerContainer containerUnderTest = new GitServerContainer(DockerImageName.parse("rockstorm/git-server"));
 
-    @TempDir
+    @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
 
 
