@@ -5,6 +5,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
@@ -14,10 +15,13 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +34,7 @@ public class GitServerContainerTest {
     private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_40.getDockerImageName();
     @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
+
 
     @Test
     void validDockerImageName() {
@@ -93,8 +98,16 @@ public class GitServerContainerTest {
     }
 
     @Test
-    void copyExistingGitRepo() {
-        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION).withCopyExistingGitRepoToContainer("src/test/resources/existingRepo");
+    void copyExistingGitRepo(@TempDir File sampleRepo) throws GitAPIException, IOException {
+        FileUtils.copyFileToDirectory(new File("src/test/resources/sampleRepo/testFile"), sampleRepo);
+
+        Git repo = Git.init().setDirectory(sampleRepo).setInitialBranch("main").call();
+        repo.add().addFilepattern("testFile").call();
+        repo.commit().setAuthor("Sandra Parsick", "sample@example.com").setMessage("init").call();
+
+        var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION)
+                .withCopyExistingGitRepoToContainer(sampleRepo.getAbsolutePath());
+
         containerUnderTest.start();
 
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
@@ -121,10 +134,16 @@ public class GitServerContainerTest {
     }
 
     @Test
-    void copyExistingGitRepoWithCustomRepoName() {
+    void copyExistingGitRepoWithCustomRepoName(@TempDir File sampleRepo) throws IOException, GitAPIException {
+        FileUtils.copyFileToDirectory(new File("src/test/resources/sampleRepo/testFile"), sampleRepo);
+
+        Git repo = Git.init().setDirectory(sampleRepo).setInitialBranch("main").call();
+        repo.add().addFilepattern("testFile").call();
+        repo.commit().setAuthor("Sandra Parsick", "sample@example.com").setMessage("init").call();
+
         var containerUnderTest = new GitServerContainer(LATEST_GIT_SERVER_VERSION)
                 .withGitRepo("customRepoName")
-                .withCopyExistingGitRepoToContainer("src/test/resources/existingRepo");
+                .withCopyExistingGitRepoToContainer(sampleRepo.getAbsolutePath());
         containerUnderTest.start();
 
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
