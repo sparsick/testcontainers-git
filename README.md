@@ -19,7 +19,7 @@ The access is via a password (Default: `12345`, can also be overwritten) or SSH 
  <dependency>
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -45,7 +45,8 @@ public class GitServerContainerUsedInJUnit5Test {
             new GitServerContainer(DockerImageName.parse("rockstorm/git-server:2.40"))
                     .withGitRepo("testRepo") // overwrite the default git repository name
                     .withGitPassword("12345") // overwrite the default git password
-                    .withSshKeyAuth(); // enabled public key authentication 
+                    .withSshKeyAuth() // enabled public key authentication
+                    .withCopyExistingGitRepoToContainer("src/test/resources/sampleRepo"); // path to an already existing Git repository
 
     @Test
     void checkInteractWithTheContainer() {
