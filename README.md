@@ -19,7 +19,7 @@ The access is via a password (Default: `12345`, can also be overwritten) or SSH 
  <dependency>
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -27,14 +27,19 @@ The access is via a password (Default: `12345`, can also be overwritten) or SSH 
 **Gradle:**
 ```groovy
 dependencies {
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.2.0'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.4.0'
 }
 ```
 
 ## Getting started with a sample
 
-The git container can be set up like in the following sample:
+The following samples show how to use the git server container in a JUnit 5 test.
+Currently, there exists two flavour:
+- git server via ssh (`GitServerContainer`)
+- git server via http (`GitHttpServerContainer`)
 
+### Git Server via SSH
+The following sample shows how to use the git server container via SSH in a JUnit 5 test:
 ````java
 
 @Testcontainers
@@ -64,6 +69,28 @@ public class GitServerContainerUsedInJUnit5Test {
         
         // check interaction
 
+    }
+}
+````
+
+### Git Server via HTTP
+The following sample shows how to use the git server container via HTTP in a JUnit 5 test:
+
+````java
+import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
+
+@Testcontainers
+public class GitHttpServerContainerUsedInJUnit5Test {
+
+    @Container
+    private GitHttpServerContainer containerUnderTest =
+            new GitHttpServerContainer(GitServerVersions.V2_40.getDockerImageName());
+
+    @Test
+    void checkInteractWithTheContainer() {
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsHttp();
+
+        // check interaction
     }
 }
 ````
