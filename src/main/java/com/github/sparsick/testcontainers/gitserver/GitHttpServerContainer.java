@@ -20,14 +20,20 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
 
     private final static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
 
+    private BasicAuthenticationCredentials basicAuthenticationCredentials;
+
 
     /**
      * @param dockerImageName - name of the docker image
      */
     public GitHttpServerContainer(DockerImageName dockerImageName) {
+        this(dockerImageName, null);
+    }
+
+    public GitHttpServerContainer(DockerImageName dockerImageName, BasicAuthenticationCredentials basicAuthenticationCredentials) {
         super(new ImageFromDockerfile()
                 .withFileFromClasspath("http-config/nginx.conf", "http-config/nginx.conf")
-                .withDockerfileFromBuilder(dockerfileBuilder(dockerImageName)));
+                .withDockerfileFromBuilder(dockerfileBuilder(dockerImageName, basicAuthenticationCredentials)));
         dockerImageName.assertCompatibleWith(DEFAULT_DOCKER_IMAGE_NAME);
 
         if ("2.38".compareTo(dockerImageName.getVersionPart()) <= 0) {
@@ -35,10 +41,50 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
         } else {
             withExposedPorts(80);
         }
+        this.basicAuthenticationCredentials = basicAuthenticationCredentials;
     }
 
     @NotNull
-    private static Consumer<DockerfileBuilder> dockerfileBuilder(DockerImageName dockerImageName) {
+    private static Consumer<DockerfileBuilder> dockerfileBuilder(DockerImageName dockerImageName, BasicAuthenticationCredentials basicAuthenticationCredentials) {
+        return builder -> {
+            var tempBuilder = builder
+                    .from(dockerImageName.toString())
+                    .run("apk add --update nginx && " +
+                            checkUpdateGit(dockerImageName) +
+                            "apk add --update git-daemon &&" +
+                            "apk add --update fcgiwrap &&" +
+                            "apk add --update spawn-fcgi && " +
+                            checkIfOpensslIsNeeded(basicAuthenticationCredentials) +
+                            "rm -rf /var/cache/apk/*")
+                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf");
+
+            if (basicAuthenticationCredentials != null) {
+                tempBuilder.run("sh", "-c", "echo \"" + basicAuthenticationCredentials.getUsername() + ":$(openssl passwd -apr1 " + basicAuthenticationCredentials.getPassword() + ")\" > /etc/nginx/.htpasswd");
+                tempBuilder.run("sh", "-c", "sed -i -e 's/#auth_basic/auth_basic/g' /etc/nginx/nginx.conf");
+
+            }
+
+            tempBuilder.cmd("spawn-fcgi -s /run/fcgi.sock /usr/bin/fcgiwrap && " +
+                            "    nginx -g \"daemon off;\"")
+                    .build();
+
+        };
+
+    }
+
+    @NotNull
+    private static String checkIfOpensslIsNeeded(BasicAuthenticationCredentials basicAuthenticationCredentials) {
+        final String enableOpenssl;
+        if (basicAuthenticationCredentials != null) {
+            enableOpenssl = "apk add --update openssl && ";
+        } else {
+            enableOpenssl = "";
+        }
+        return enableOpenssl;
+    }
+
+    @NotNull
+    private static String checkUpdateGit(DockerImageName dockerImageName) {
         final String updateGit;
         if ("2.36".compareTo(dockerImageName.getVersionPart()) == 0) {
             updateGit = "apk add --update git=2.36.6-r0 && ";
@@ -47,20 +93,7 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
         } else {
             updateGit = "";
         }
-
-        return builder ->
-                builder
-                        .from(dockerImageName.toString())
-                        .run("apk add --update nginx && " +
-                                updateGit +
-                                "apk add --update git-daemon &&" +
-                                "apk add --update fcgiwrap &&" +
-                                "apk add --update spawn-fcgi && " +
-                                "rm -rf /var/cache/apk/*")
-                        .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf")
-                        .cmd("spawn-fcgi -s /run/fcgi.sock /usr/bin/fcgiwrap && " +
-                                "    nginx -g \"daemon off;\"")
-                        .build();
+        return updateGit;
     }
 
     /**
@@ -69,7 +102,7 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
      * @return HTTP URI
      */
     public URI getGitRepoURIAsHttp() {
-        return URI.create("http://"+ getHost()+":" + getMappedPort(80) + "/git/"+gitRepoName);
+        return URI.create("http://" + getHost() + ":" + getMappedPort(80) + "/git/" + gitRepoName);
     }
 
     @Override
@@ -78,7 +111,7 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
         configureGitRepository();
     }
 
-    private void configureGitRepository()  {
+    private void configureGitRepository() {
         try {
             String gitRepoPath = String.format("/srv/git/%s.git", gitRepoName);
             execInContainer("mkdir", "-p", gitRepoPath);
@@ -87,8 +120,12 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
             execInContainer("sh", "-c", "echo '        receivepack = true' >> " + gitRepoPath + "/config");
             execInContainer("chown", "-R", "git:git", "/srv");
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Configure Git repository failed",e);
+            throw new RuntimeException("Configure Git repository failed", e);
 
         }
     }
+    public BasicAuthenticationCredentials getBasicAuthCredentials() {
+        return basicAuthenticationCredentials;
+    }
+
 }
