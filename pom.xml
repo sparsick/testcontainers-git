@@ -6,7 +6,7 @@
 
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.4.0</version>
 
     <name>Git Server for Testcontainers</name>
     <description>Testcontainers Wrapper for gitserver Container Image</description>
