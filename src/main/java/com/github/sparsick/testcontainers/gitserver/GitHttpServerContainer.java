@@ -20,7 +20,7 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
 
     private final static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
 
-    private BasicAuthenticationCredentials basicAuthenticationCredentials;
+    private final BasicAuthenticationCredentials basicAuthenticationCredentials;
 
 
     /**
@@ -30,6 +30,10 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
         this(dockerImageName, null);
     }
 
+    /**
+     * @param dockerImageName - name of the docker image
+     * @param basicAuthenticationCredentials - credentials for basic authentication
+     */
     public GitHttpServerContainer(DockerImageName dockerImageName, BasicAuthenticationCredentials basicAuthenticationCredentials) {
         super(new ImageFromDockerfile()
                 .withFileFromClasspath("http-config/nginx.conf", "http-config/nginx.conf")
@@ -124,6 +128,12 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
 
         }
     }
+
+    /**
+     * Return credentials for basic authentication
+     *
+     * @return credentials for basic authentication
+     */
     public BasicAuthenticationCredentials getBasicAuthCredentials() {
         return basicAuthenticationCredentials;
     }
