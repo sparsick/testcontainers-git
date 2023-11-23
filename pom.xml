@@ -45,7 +45,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -59,7 +58,6 @@
             <artifactId>org.eclipse.jgit</artifactId>
             <version>${jgit.version}</version>
             <scope>test</scope>
-
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -80,6 +78,13 @@
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers-bom</artifactId>
                 <version>1.19.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
