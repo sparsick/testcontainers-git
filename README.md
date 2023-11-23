@@ -74,7 +74,7 @@ public class GitServerContainerUsedInJUnit5Test {
 ````
 
 ### Git Server via HTTP
-The following sample shows how to use the git server container via HTTP in a JUnit 5 test:
+The following sample shows how to use the git server container via HTTP without Basic Authentication in a JUnit 5 test:
 
 ````java
 import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
@@ -89,6 +89,32 @@ public class GitHttpServerContainerUsedInJUnit5Test {
     @Test
     void checkInteractWithTheContainer() {
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsHttp();
+
+        // check interaction
+    }
+}
+````
+
+The next sample shows how to use the git server container via HTTP with Basic Authentication in a JUnit 5 test:
+
+````java
+import com.github.sparsick.testcontainers.gitserver.BasicAuthenticationCredentials;
+import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
+
+@Testcontainers
+public class GitHttpServerContainerUsedInJUnit5Test {
+
+    @Container
+    private GitHttpServerContainer containerUnderTest =
+            new GitHttpServerContainer(GitServerVersions.V2_40.getDockerImageName, new BasicAuthenticationCredentials("testuser", "testPassword"));
+
+    @Test
+    void checkInteractWithTheContainer() {
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsHttp();
+
+        BasicAuthenticationCredentials basicAuthCredentials = containerUnderTest.getBasicAuthCredentials();
+        String username = basicAuthCredentials.getUsername();
+        String password = basicAuthCredentials.getPassword();
 
         // check interaction
     }
