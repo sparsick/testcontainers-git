@@ -30,7 +30,7 @@ jobs:
   build:
     name: "JDK 17 Eclipse Temurin"
     runs-on: ubuntu-latest
-    container: "maven:3.9.5-eclipse-temurin-17-focal"
+    container: "maven:3.9.6-eclipse-temurin-17-focal"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
