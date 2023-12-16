@@ -77,7 +77,7 @@ public class GitServerContainerUsedInJUnit5Test {
 The following sample shows how to use the git server container via HTTP without Basic Authentication in a JUnit 5 test:
 
 ````java
-import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
+import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -98,8 +98,8 @@ public class GitHttpServerContainerUsedInJUnit5Test {
 The next sample shows how to use the git server container via HTTP with Basic Authentication in a JUnit 5 test:
 
 ````java
-import com.github.sparsick.testcontainers.gitserver.BasicAuthenticationCredentials;
-import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
+import com.github.sparsick.testcontainers.gitserver.http.BasicAuthenticationCredentials;
+import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {

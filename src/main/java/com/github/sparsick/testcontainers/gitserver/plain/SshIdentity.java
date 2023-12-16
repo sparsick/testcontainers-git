@@ -1,4 +1,4 @@
-package com.github.sparsick.testcontainers.gitserver;
+package com.github.sparsick.testcontainers.gitserver.plain;
 
 /**
  * Value object for identity information for a public key authentication.

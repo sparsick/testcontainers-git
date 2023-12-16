@@ -1,4 +1,4 @@
-package com.github.sparsick.testcontainers.gitserver;
+package com.github.sparsick.testcontainers.gitserver.plain;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.testcontainers.containers.BindMode;
