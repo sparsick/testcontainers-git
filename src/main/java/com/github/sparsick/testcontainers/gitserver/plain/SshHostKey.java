@@ -1,4 +1,4 @@
-package com.github.sparsick.testcontainers.gitserver;
+package com.github.sparsick.testcontainers.gitserver.plain;
 
 import java.util.Objects;
 

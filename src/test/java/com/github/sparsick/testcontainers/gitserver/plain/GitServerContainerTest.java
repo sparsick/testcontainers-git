@@ -1,5 +1,6 @@
-package com.github.sparsick.testcontainers.gitserver;
+package com.github.sparsick.testcontainers.gitserver.plain;
 
+import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
 import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;

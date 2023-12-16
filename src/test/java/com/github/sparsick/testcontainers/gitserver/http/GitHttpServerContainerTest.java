@@ -1,5 +1,8 @@
-package com.github.sparsick.testcontainers.gitserver;
+package com.github.sparsick.testcontainers.gitserver.http;
 
+import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
+import com.github.sparsick.testcontainers.gitserver.http.BasicAuthenticationCredentials;
+import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
 import org.assertj.core.api.ThrowableAssert;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
