@@ -1,6 +1,5 @@
 package com.github.sparsick.testcontainers.gitserver.plain;
 
-import com.github.sparsick.testcontainers.gitserver.plain.GitServerContainer;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.SshTransport;
