@@ -1,0 +1,50 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfBasicAuthenticationCredentials
+displayName: Rename package of BasicAuthenticationCredentials
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.BasicAuthenticationCredentials
+      newFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.http.BasicAuthenticationCredentials
+      ignoreDefinition: null
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitServerContainer
+displayName: Rename package of GitServerContainer
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.GitServerContainer
+      newFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.plain.GitServerContainer
+      ignoreDefinition: null
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshHostKey
+displayName: Rename package of SshHostKey
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.SshHostKey
+      newFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.plain.SshHostKey
+      ignoreDefinition: null
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
+displayName: Rename package of SshIdentity
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.SshIdentity
+      newFullyQualifiedTypeName: com.github.sparsick.testcontainers.gitserver.plain.SshIdentity
+      ignoreDefinition: null
+---
+
+type: specs.openrewrite.org/v1beta/recipe
+name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
+displayName: Split package
+recipeList:
+  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
+  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshHostKey
+  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitServerContainer
+  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfBasicAuthenticationCredentials
+  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitHttpServerContainer

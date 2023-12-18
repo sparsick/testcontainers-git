@@ -8,12 +8,12 @@ import org.openrewrite.test.RewriteTest;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class RenameImportOfGitHttpContainerTest implements RewriteTest {
+public class RenamePackageOfGitHttpServerContainerTest implements RewriteTest {
 
 
         @Override
         public void defaults(RecipeSpec spec) {
-            spec.recipe(new RenameImportOfGitHttpContainer());
+            spec.recipe(new RenamePackageOfGitHttpServerContainer());
                 spec.parser(JavaParser.fromJavaVersion()
                                 .classpathFromResources(new InMemoryExecutionContext(), "testcontainers-gitserver-0.4.0"));
         }

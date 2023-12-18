@@ -14,10 +14,10 @@ import org.openrewrite.java.tree.NameTree;
 
 import java.util.Set;
 
-public class RenameImportOfGitHttpContainer extends Recipe {
+public class RenamePackageOfGitHttpServerContainer extends Recipe {
 
     @JsonCreator
-    public RenameImportOfGitHttpContainer() {
+    public RenamePackageOfGitHttpServerContainer() {
     }
 
     @Override
@@ -35,11 +35,11 @@ public class RenameImportOfGitHttpContainer extends Recipe {
         return Preconditions.check(Preconditions.or(
                 new UsesType<>("com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer", false),
                 new FindImports("com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer", null).getVisitor()
-        ), new RenameImportOfGitHttpContainerVisitor());
+        ), new RenamePackageOfGitHttpContainerVisitor());
 
     }
 
-    private class RenameImportOfGitHttpContainerVisitor extends JavaIsoVisitor<ExecutionContext> {
+    private class RenamePackageOfGitHttpContainerVisitor extends JavaIsoVisitor<ExecutionContext> {
 
 
         @Override
