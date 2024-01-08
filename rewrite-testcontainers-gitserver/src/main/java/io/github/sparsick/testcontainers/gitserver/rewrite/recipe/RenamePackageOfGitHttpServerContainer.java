@@ -14,8 +14,14 @@ import org.openrewrite.java.tree.NameTree;
 
 import java.util.Set;
 
+/**
+ * Rename import for GitHttpContainer.
+ */
 public class RenamePackageOfGitHttpServerContainer extends Recipe {
 
+    /**
+     * Default constructor.
+     */
     @JsonCreator
     public RenamePackageOfGitHttpServerContainer() {
     }
