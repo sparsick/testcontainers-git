@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitServerContainerTest {
 
-    private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_40.getDockerImageName();
+    private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_43.getDockerImageName();
     @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
 
