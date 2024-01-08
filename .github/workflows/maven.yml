@@ -28,9 +28,9 @@ on:
 
 jobs:
   build:
-    name: "JDK 17 Eclipse Temurin"
+    name: "JDK 21 Eclipse Temurin"
     runs-on: ubuntu-latest
-    container: "maven:3.9.6-eclipse-temurin-17-focal"
+    container: "maven:3.9.6-eclipse-temurin-21"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
