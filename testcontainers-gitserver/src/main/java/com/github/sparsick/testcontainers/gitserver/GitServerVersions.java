@@ -11,6 +11,11 @@ public enum GitServerVersions {
     /**
      * rockstorm/git-server:2.40
      */
+    V2_43(DockerImageName.parse("rockstorm/git-server:2.43")),
+
+    /**
+     * rockstorm/git-server:2.40
+     */
     V2_40(DockerImageName.parse("rockstorm/git-server:2.40")),
     /**
      * rockstorm/git-server:2.38
