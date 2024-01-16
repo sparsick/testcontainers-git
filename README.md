@@ -112,7 +112,7 @@ public class GitHttpServerContainerUsedInJUnit5Test {
 
     @Container
     private GitHttpServerContainer containerUnderTest =
-            new GitHttpServerContainer(GitServerVersions.V2_43.getDockerImageName, new BasicAuthenticationCredentials("testuser", "testPassword"));
+            new GitHttpServerContainer(GitServerVersions.V2_43.getDockerImageName(), new BasicAuthenticationCredentials("testuser", "testPassword"));
 
     @Test
     void checkInteractWithTheContainer() {
