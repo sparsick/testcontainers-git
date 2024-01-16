@@ -19,7 +19,7 @@ The access is via a password (Default: `12345`, can also be overwritten) or SSH 
  <dependency>
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -27,7 +27,7 @@ The access is via a password (Default: `12345`, can also be overwritten) or SSH 
 **Gradle:**
 ```groovy
 dependencies {
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.4.0'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.5.0'
 }
 ```
 
