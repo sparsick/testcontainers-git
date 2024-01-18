@@ -33,7 +33,7 @@ jobs:
     container: "maven:3.9.6-eclipse-temurin-21"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-jdk17-${{ hashFiles('**/pom.xml') }}
