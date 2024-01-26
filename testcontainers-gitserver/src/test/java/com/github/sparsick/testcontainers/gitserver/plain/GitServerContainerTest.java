@@ -18,15 +18,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,7 +44,11 @@ public class GitServerContainerTest {
     private File tempDir;
 
 
-
+    static Stream<Arguments> publicKeySupportedVersions () {
+        return Arrays.stream(GitServerVersions.values())
+            .filter(v -> !(v == GitServerVersions.V2_36 || v == GitServerVersions.V2_34_2 || v == GitServerVersions.V2_34))
+            .map(Arguments::of);
+    }
 
     @Test
     void validDockerImageName() {
@@ -168,7 +177,7 @@ public class GitServerContainerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(GitServerVersions.class)
+    @MethodSource("publicKeySupportedVersions")
     void pubKeyAuth(GitServerVersions gitServer) {
         var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName()).withSshKeyAuth();
 
@@ -189,7 +198,8 @@ public class GitServerContainerTest {
 
 
     @ParameterizedTest
-    @EnumSource(GitServerVersions.class)
+//    @EnumSource(GitServerVersions.class)
+    @MethodSource("publicKeySupportedVersions")
     void strictHostKeyVerifivation(GitServerVersions gitServer) {
         var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName()).withSshKeyAuth();
 
