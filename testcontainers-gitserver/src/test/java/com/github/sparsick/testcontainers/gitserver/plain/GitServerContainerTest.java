@@ -198,7 +198,6 @@ public class GitServerContainerTest {
 
 
     @ParameterizedTest
-//    @EnumSource(GitServerVersions.class)
     @MethodSource("publicKeySupportedVersions")
     void strictHostKeyVerifivation(GitServerVersions gitServer) {
         var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName()).withSshKeyAuth();
