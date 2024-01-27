@@ -114,6 +114,18 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         super.containerIsStarted(containerInfo);
             configureGitRepository();
             collectHostKeyInformation();
+            fixFilePermissions();
+    }
+
+    /**
+     * Wrong file permissions cause authentication to fail.
+     */
+    private void fixFilePermissions() {
+        try {
+            execInContainer("chmod", "600", "/home/git/.ssh/authorized_keys");
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Could not fix file permissions on /home/git/.ssh/authorized_keys", e);
+        }
     }
 
     private void collectHostKeyInformation() {
