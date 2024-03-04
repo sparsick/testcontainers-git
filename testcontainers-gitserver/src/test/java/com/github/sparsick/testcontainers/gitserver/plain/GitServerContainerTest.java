@@ -46,7 +46,7 @@ public class GitServerContainerTest {
 
     static Stream<Arguments> publicKeySupportedVersions () {
         return Arrays.stream(GitServerVersions.values())
-            .filter(v -> !(v == GitServerVersions.V2_36 || v == GitServerVersions.V2_34_2 || v == GitServerVersions.V2_34))
+//            .filter(v -> !(v == GitServerVersions.V2_36 || v == GitServerVersions.V2_34_2 || v == GitServerVersions.V2_34))
             .map(Arguments::of);
     }
 
