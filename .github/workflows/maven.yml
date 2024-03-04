@@ -8,7 +8,7 @@ on:
 
 jobs:
   linux-build:
-    name: "JDK 21 Eclipse Temurin"
+    name: "JDK 21 Eclipse Temurin Linux"
     runs-on: ubuntu-latest
     container: "maven:3.9.6-eclipse-temurin-21"
     steps:
@@ -32,27 +32,27 @@ jobs:
           files: ./rewrite-testcontainers-gitserver/target/site/jacoco/jacoco.xml, ./testcontainers-gitserver/target/site/jacoco/jacoco.xml
           fail_ci_if_error: true
           verbose: false
-    windows-build:
-      name: "JDK 21 Eclipse Temurin"
-      runs-on: windows-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/cache@v4
-          with:
-            path: ~/.m2/repository
-            key: maven-jdk17-windows-${{ hashFiles('**/pom.xml') }}
-            restore-keys: maven-jdk17
-        - uses: actions/setup-java@v4
-          with:
-            distribution: 'temurin'
-            java-version: '17'
-        - uses: stCarolas/setup-maven@v5
-          with:
-            maven-version: 3.9.6
-        - name: 'Build'
-          run: |
-            mvn 
-            --fail-at-end \
-            --batch-mode \
-            --no-transfer-progress \
-            clean verify \
+  windows-build:
+    name: "JDK 21 Eclipse Temurin Windows"
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-jdk17-windows-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-jdk17
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.6
+      - name: 'Build'
+        run: |
+          mvn 
+          --fail-at-end \
+          --batch-mode \
+          --no-transfer-progress \
+          clean verify \
