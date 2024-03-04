@@ -51,8 +51,4 @@ jobs:
           maven-version: 3.9.6
       - name: 'Build'
         run: |
-          mvn 
-          --fail-at-end \
-          --batch-mode \
-          --no-transfer-progress \
-          clean verify \
+          mvn --fail-at-end --batch-mode --no-transfer-progress clean verify
