@@ -4,6 +4,7 @@ import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
 import org.assertj.core.api.ThrowableAssert;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
@@ -14,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 
 public class GitHttpServerContainerTest {
@@ -48,7 +49,9 @@ public class GitHttpServerContainerTest {
                 .setURI(containerUnderTest.getGitRepoURIAsHttp().toString())
                 .setDirectory(tempDir)
                 .call();
-        assertThatException().isThrownBy(tryingClone);
+        TransportException expectedException = catchThrowableOfType(tryingClone, TransportException.class);
+        assertThat(expectedException).isNotNull();
+        assertThat(expectedException).hasMessageContaining("Authentication is required");
     }
 
     @ParameterizedTest

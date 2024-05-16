@@ -55,8 +55,8 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
                     .from(dockerImageName.toString())
                     .run("apk add --update nginx && " +
                             checkUpdateGit(dockerImageName) +
-                            "apk add --update git-daemon &&" +
-                            "apk add --update fcgiwrap &&" +
+                            "apk add --update git git-daemon && " +
+                            "apk add --update fcgiwrap && " +
                             "apk add --update spawn-fcgi && " +
                             checkIfOpensslIsNeeded(basicAuthenticationCredentials) +
                             "rm -rf /var/cache/apk/*")
