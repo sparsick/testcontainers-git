@@ -68,7 +68,7 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
 
             }
 
-            tempBuilder.cmd("spawn-fcgi -s /run/fcgi.sock /usr/bin/fcgiwrap && " +
+            tempBuilder.cmd("spawn-fcgi -s /run/fcgi.sock -- /usr/bin/fcgiwrap -f && " +
                             "    nginx -g \"daemon off;\"")
                     .build();
 
