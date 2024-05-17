@@ -60,12 +60,12 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
                             "apk add --update spawn-fcgi && " +
                             checkIfOpensslIsNeeded(basicAuthenticationCredentials) +
                             "rm -rf /var/cache/apk/*")
-                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf");
+                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf")
+                    .run("git config --global --add safe.directory '*'");
 
             if (basicAuthenticationCredentials != null) {
                 tempBuilder.run("sh", "-c", "echo \"" + basicAuthenticationCredentials.getUsername() + ":$(openssl passwd -apr1 " + basicAuthenticationCredentials.getPassword() + ")\" > /etc/nginx/.htpasswd");
                 tempBuilder.run("sh", "-c", "sed -i -e 's/#auth_basic/auth_basic/g' /etc/nginx/nginx.conf");
-
             }
 
             tempBuilder.cmd("spawn-fcgi -s /run/fcgi.sock -- /usr/bin/fcgiwrap -f && " +
