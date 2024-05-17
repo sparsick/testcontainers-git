@@ -30,9 +30,12 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
         super(dockerImageName);
         dockerImageName.assertCompatibleWith(DEFAULT_DOCKER_IMAGE_NAME);
         if ("2.38".compareTo(dockerImageName.getVersionPart()) <= 0) {
-            waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1)).addExposedPorts(22);
+            waitingFor(Wait.forLogMessage(".*Container configuration completed.*", 1))
+                    .waitingFor(Wait.forListeningPorts(22))
+                    .addExposedPorts(22);
         } else {
-            withExposedPorts(22);
+            waitingFor(Wait.forListeningPorts(22))
+                    .addExposedPorts(22);
         }
         withCommand("/usr/sbin/sshd", "-D", "-e");
     }
