@@ -19,7 +19,7 @@ The access is via a password (Default: `12345`, can also be overwritten) or SSH 
  <dependency>
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <scope>test</scope>
 </dependency>
 ```
