@@ -55,7 +55,6 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
                     .from(dockerImageName.toString())
                     .run("apk add --update nginx && " +
                             checkUpdateGit(dockerImageName) +
-                            "apk add --update git git-daemon && " +
                             "apk add --update fcgiwrap && " +
                             "apk add --update spawn-fcgi && " +
                             checkIfOpensslIsNeeded(basicAuthenticationCredentials) +
@@ -91,11 +90,11 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
     private static String checkUpdateGit(DockerImageName dockerImageName) {
         final String updateGit;
         if ("2.36".compareTo(dockerImageName.getVersionPart()) == 0) {
-            updateGit = "apk add --update git=2.36.6-r0 && ";
+            updateGit = "apk add --update git=2.36.6-r0 git-daemon=2.36.6-r0 && ";
         } else if ("2.34".compareTo(dockerImageName.getVersionPart()) == 0) {
-            updateGit = "apk add --update git=2.34.8-r0 && ";
+            updateGit = "apk add --update git=2.34.8-r0 git-daemon=2.34.8-r0 && ";
         } else {
-            updateGit = "";
+            updateGit = "apk add --update git git-daemon && ";
         }
         return updateGit;
     }
