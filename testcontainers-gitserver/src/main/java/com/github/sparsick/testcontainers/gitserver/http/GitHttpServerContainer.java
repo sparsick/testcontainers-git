@@ -55,20 +55,19 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
                     .from(dockerImageName.toString())
                     .run("apk add --update nginx && " +
                             checkUpdateGit(dockerImageName) +
-                            "apk add --update git-daemon &&" +
-                            "apk add --update fcgiwrap &&" +
+                            "apk add --update fcgiwrap && " +
                             "apk add --update spawn-fcgi && " +
                             checkIfOpensslIsNeeded(basicAuthenticationCredentials) +
                             "rm -rf /var/cache/apk/*")
-                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf");
+                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf")
+                    .run("git config --global --add safe.directory '*'");
 
             if (basicAuthenticationCredentials != null) {
                 tempBuilder.run("sh", "-c", "echo \"" + basicAuthenticationCredentials.getUsername() + ":$(openssl passwd -apr1 " + basicAuthenticationCredentials.getPassword() + ")\" > /etc/nginx/.htpasswd");
                 tempBuilder.run("sh", "-c", "sed -i -e 's/#auth_basic/auth_basic/g' /etc/nginx/nginx.conf");
-
             }
 
-            tempBuilder.cmd("spawn-fcgi -s /run/fcgi.sock /usr/bin/fcgiwrap && " +
+            tempBuilder.cmd("spawn-fcgi -s /run/fcgi.sock -- /usr/bin/fcgiwrap -f && " +
                             "    nginx -g \"daemon off;\"")
                     .build();
 
@@ -91,11 +90,11 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
     private static String checkUpdateGit(DockerImageName dockerImageName) {
         final String updateGit;
         if ("2.36".compareTo(dockerImageName.getVersionPart()) == 0) {
-            updateGit = "apk add --update git=2.36.6-r0 && ";
+            updateGit = "apk add --update git=2.36.6-r0 git-daemon=2.36.6-r0 && ";
         } else if ("2.34".compareTo(dockerImageName.getVersionPart()) == 0) {
-            updateGit = "apk add --update git=2.34.8-r0 && ";
+            updateGit = "apk add --update git=2.34.8-r0 git-daemon=2.34.8-r0 && ";
         } else {
-            updateGit = "";
+            updateGit = "apk add --update git git-daemon && ";
         }
         return updateGit;
     }
