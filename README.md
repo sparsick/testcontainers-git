@@ -7,9 +7,8 @@ This project contains a [Testcontainers](https://www.testcontainers.org/) implem
 
 It sets up the git server with a ready to use repository with the default name `testRepo`. 
 The repository name can be overwritten.
-As default this git repository would be exposed as a SSH URI. 
+It exists two flavours for the git server (exposed by SSH or bz HTTP)
 The port is set by testcontainers' mechanism.
-The access is via a password (Default: `12345`, can also be overwritten) or SSH public key that is given by the container instance.
 
 ## Add me as Dependency
 
