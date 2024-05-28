@@ -9,7 +9,13 @@ import org.testcontainers.utility.DockerImageName;
 public enum GitServerVersions {
 
     /**
-     * rockstorm/git-server:2.40
+     * rockstorm/git-server:2.43
+     */
+    V2_45(DockerImageName.parse("rockstorm/git-server:2.45")),
+
+
+    /**
+     * rockstorm/git-server:2.43
      */
     V2_43(DockerImageName.parse("rockstorm/git-server:2.43")),
 
