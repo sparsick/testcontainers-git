@@ -30,7 +30,7 @@ jobs:
   build:
     name: "JDK 21 Eclipse Temurin"
     runs-on: ubuntu-latest
-    container: "maven:3.9.6-eclipse-temurin-21"
+    container: "maven:3.9.7-eclipse-temurin-21"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
