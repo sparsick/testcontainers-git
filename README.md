@@ -18,7 +18,7 @@ The port is set by testcontainers' mechanism.
  <dependency>
     <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <scope>test</scope>
 </dependency>
 ```
