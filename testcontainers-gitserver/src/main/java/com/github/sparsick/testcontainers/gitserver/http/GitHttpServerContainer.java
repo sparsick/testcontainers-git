@@ -59,8 +59,7 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
                             "apk add --update spawn-fcgi && " +
                             checkIfOpensslIsNeeded(basicAuthenticationCredentials) +
                             "rm -rf /var/cache/apk/*")
-                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf")
-                    .run("git config --global --add safe.directory '*'");
+                    .copy("./http-config/nginx.conf", "/etc/nginx/nginx.conf");
 
             if (basicAuthenticationCredentials != null) {
                 tempBuilder.run("sh", "-c", "echo \"" + basicAuthenticationCredentials.getUsername() + ":$(openssl passwd -apr1 " + basicAuthenticationCredentials.getPassword() + ")\" > /etc/nginx/.htpasswd");
@@ -121,7 +120,6 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
             execInContainer("git", "init", "--bare", gitRepoPath);
             execInContainer("sh", "-c", "echo '[http]' >> " + gitRepoPath + "/config");
             execInContainer("sh", "-c", "echo '        receivepack = true' >> " + gitRepoPath + "/config");
-            execInContainer("chown", "-R", "git:git", "/srv");
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Configure Git repository failed", e);
 
