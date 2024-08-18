@@ -41,6 +41,7 @@ recipeList:
 
 type: specs.openrewrite.org/v1beta/recipe
 name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
+description: Splitting origin package into plain and http specific ones.
 displayName: Split package
 recipeList:
   - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
