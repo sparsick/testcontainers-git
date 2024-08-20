@@ -6,10 +6,12 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,8 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 
 public class GitHttpServerContainerTest {
+
+    private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_45.getDockerImageName();
 
     @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
@@ -69,6 +73,16 @@ public class GitHttpServerContainerTest {
 
         assertThat(new File(tempDir, ".git")).exists();
         assertGitPull(git, credentialsProvider);
+    }
+
+    @Test
+    void enableHttpProxySetting() throws GitAPIException, IOException {
+        GitHttpServerContainer containerUnderTest = new GitHttpServerContainer(LATEST_GIT_SERVER_VERSION).withHttpProxySetting(new HttpProxySetting("http://proxy.example.com", "https://proxy.example.com", ""));
+        containerUnderTest.start();
+
+        assertThat(containerUnderTest.hasHttpProxy()).isTrue();
+
+
     }
 
     private void assertGitPull(Git git, UsernamePasswordCredentialsProvider credentialsProvider) throws IOException, GitAPIException {
