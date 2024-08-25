@@ -98,7 +98,7 @@ public class GitHttpServerContainerUsedInJUnit5Test {
     }
 }
 ````
-
+#### HTTP with Basic Authentication
 The next sample shows how to use the git server container via HTTP with Basic Authentication in a JUnit 5 test:
 
 ````java
