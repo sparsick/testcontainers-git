@@ -32,6 +32,7 @@
     <modules>
         <module>testcontainers-gitserver</module>
         <module>rewrite-testcontainers-gitserver</module>
+        <module>testcontainers-git-bom</module>
     </modules>
 
     <dependencyManagement>
