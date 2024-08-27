@@ -21,6 +21,8 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
     private final static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
 
     private final BasicAuthenticationCredentials basicAuthenticationCredentials;
+    private HttpProxySetting httpProxySetting;
+    private boolean httpProxyEnabled = false;
 
 
     /**
@@ -135,4 +137,20 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
         return basicAuthenticationCredentials;
     }
 
+    public boolean hasHttpProxy() {
+        return this.httpProxyEnabled;
+    }
+
+    public GitHttpServerContainer withHttpProxySetting(HttpProxySetting httpProxySetting) {
+        withEnv("HTTP_PROXY", httpProxySetting.getHttpProxy());
+        withEnv("http_proxy", httpProxySetting.getHttpProxy());
+
+        withEnv("HTTPS_PROXY", httpProxySetting.getHttpsProxy());
+        withEnv("https_proxy", httpProxySetting.getHttpsProxy());
+
+        withEnv("NO_PROXY", httpProxySetting.getNoProxy());
+        withEnv("no_proxy", httpProxySetting.getNoProxy());
+        this.httpProxyEnabled = true;
+        return this;
+    }
 }
