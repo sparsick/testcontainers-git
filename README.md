@@ -7,7 +7,7 @@ This project contains a [Testcontainers](https://www.testcontainers.org/) implem
 
 It sets up the git server with a ready to use repository with the default name `testRepo`. 
 The repository name can be overwritten.
-It exists two flavours for the git server (exposed by SSH or bz HTTP)
+It exists two flavours for the git server (exposed by SSH or by HTTP)
 The port is set by testcontainers' mechanism.
 
 ## Add me as Dependency
@@ -15,18 +15,37 @@ The port is set by testcontainers' mechanism.
 
 **Maven:**
 ```xml
- <dependency>
-    <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
-    <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.8.0</version>
-    <scope>test</scope>
-</dependency>
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+            <artifactId>testcontainers-git-bom</artifactId>
+            <version>0.9.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+     <dependency>
+        <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+        <artifactId>testcontainers-gitserver</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 ```
 
 **Gradle:**
 ```groovy
+dependencyManagement {
+    imports {
+        mavenBom("io.github.sparsick.testcontainers.gitserver:testcontainers-git-bom:0.9.0")
+    }
+}
+
+
 dependencies {
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.5.0'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver'
 }
 ```
 
@@ -98,7 +117,7 @@ public class GitHttpServerContainerUsedInJUnit5Test {
     }
 }
 ````
-
+#### HTTP with Basic Authentication
 The next sample shows how to use the git server container via HTTP with Basic Authentication in a JUnit 5 test:
 
 ````java
@@ -125,6 +144,29 @@ public class GitHttpServerContainerUsedInJUnit5Test {
     }
 }
 ````
+#### Enabling HTTP Proxy
+Since 0.9.0 it is possible to configure HTTP proxy, programmatically. 
+
+````java
+import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
+import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
+
+@Testcontainers
+public class GitHttpServerContainerUsedInJUnit5Test {
+
+    @Container
+    private GitHttpServerContainer containerUnderTest =
+            new GitHttpServerContainer(GitServerVersions.V2_43.getDockerImageName())
+                    .withHttpProxySetting(new HttpProxySetting("http://proxy.example.com", "https://proxy.example.com", ""));
+
+    @Test
+    void hasHttpProxySetting() {
+        assertThat(containerUnderTest.hasHttpProxy()).isTrue();
+        // check interaction
+    }
+}
+````
+
 ## Migration Guide
 ### Migration from 0.4.x to 0.5.x
 
