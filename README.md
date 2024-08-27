@@ -15,18 +15,37 @@ The port is set by testcontainers' mechanism.
 
 **Maven:**
 ```xml
- <dependency>
-    <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
-    <artifactId>testcontainers-gitserver</artifactId>
-    <version>0.9.0</version>
-    <scope>test</scope>
-</dependency>
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+            <artifactId>testcontainers-git-bom</artifactId>
+            <version>0.9.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+     <dependency>
+        <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+        <artifactId>testcontainers-gitserver</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 ```
 
 **Gradle:**
 ```groovy
+dependencyManagement {
+    imports {
+        mavenBom("io.github.sparsick.testcontainers.gitserver:testcontainers-git-bom:0.9.0")
+    }
+}
+
+
 dependencies {
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver:0.9.0'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver'
 }
 ```
 
