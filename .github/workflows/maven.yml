@@ -21,6 +21,8 @@
 name: Java CI with Maven
 
 on:
+  cron:
+    - cron: '0 6 1 * *'
   push:
     branches: [ main ]
   pull_request:
