@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 public class GitHttpServerContainerTest {
 
-    private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_45.getDockerImageName();
+    private static final DockerImageName LATEST_GIT_SERVER_VERSION = GitServerVersions.V2_47.getDockerImageName();
 
     @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
