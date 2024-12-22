@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
         <artifactId>testcontainers-git-parent</artifactId>
-        <version>0.11.0</version>
+        <version>0.12.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>testcontainers-gitserver</artifactId>
