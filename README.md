@@ -20,7 +20,7 @@ The port is set by testcontainers' mechanism.
         <dependency>
             <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
             <artifactId>testcontainers-git-bom</artifactId>
-            <version>0.10.0</version>
+            <version>0.11.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -39,7 +39,7 @@ The port is set by testcontainers' mechanism.
 ```groovy
 dependencyManagement {
     imports {
-        mavenBom("io.github.sparsick.testcontainers.gitserver:testcontainers-git-bom:0.10.0")
+        mavenBom("io.github.sparsick.testcontainers.gitserver:testcontainers-git-bom:0.11https://josh-ops.com/posts/github-code-coverage/.0")
     }
 }
 
