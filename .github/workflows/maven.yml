@@ -48,9 +48,9 @@ jobs:
           --batch-mode \
           --no-transfer-progress \
           clean verify \
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./rewrite-testcontainers-gitserver/target/site/jacoco/jacoco.xml, ./testcontainers-gitserver/target/site/jacoco/jacoco.xml
           fail_ci_if_error: true
-          verbose: false
+          verbose: true
