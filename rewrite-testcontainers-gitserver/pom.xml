@@ -11,6 +11,8 @@
     </parent>
 
     <artifactId>rewrite-testcontainers-gitserver</artifactId>
+    <name>Rewrite for Git Server for Testcontainers</name>
+
 
     <dependencies>
         <dependency>

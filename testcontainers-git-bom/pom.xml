@@ -11,6 +11,8 @@
 
     <artifactId>testcontainers-git-bom</artifactId>
     <packaging>pom</packaging>
+    <name>BOM for Git Server for Testcontainers</name>
+
 
     <dependencyManagement>
         <dependencies>
