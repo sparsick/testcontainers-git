@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
         <artifactId>testcontainers-git-parent</artifactId>
-        <version>0.12.0</version>
+        <version>0.13.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>testcontainers-git-bom</artifactId>
@@ -24,7 +24,7 @@
             <dependency>
                 <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
                 <artifactId>testcontainers-gitserver</artifactId>
-                <version>0.12.0</version>
+                <version>0.13.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
