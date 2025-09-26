@@ -17,7 +17,7 @@ import java.util.Base64;
 public class GitServerContainer extends GenericContainer<GitServerContainer> {
 
     private static final String GIT_PASSWORD_KEY = "GIT_PASSWORD";
-    private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
+    private static final DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("rockstorm/git-server");
     private String gitRepoName = "testRepo";
     private String pathToExistingRepo;
     private SshIdentity sshClientIdentity;
@@ -153,6 +153,7 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
                 execInContainer("git", "init", "--bare", gitRepoPath);
                 execInContainer("chown", "-R", "git:git", "/srv");
             }
+            execInContainer("git", "symbolic-ref", "HEAD", "refs/heads/main");
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Configure Git repository failed",e);
         }
