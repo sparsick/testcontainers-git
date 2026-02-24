@@ -88,7 +88,7 @@ public class GitHttpServerContainerTest {
     private void assertGitPull(Git git, UsernamePasswordCredentialsProvider credentialsProvider) throws IOException, GitAPIException {
         new File(tempDir, "test.txt").createNewFile();
         git.add().addFilepattern(".").call();
-        git.commit().setMessage("test").call();
+        git.commit().setSign(false).setMessage("test").call();
 
         if (credentialsProvider == null) {
             git.push().call();
