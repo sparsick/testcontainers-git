@@ -207,7 +207,7 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/sparsick/maven-docker-extension/issues</url>
+        <url>https://github.com/sparsick/testcontainers-git/issues</url>
     </issueManagement>
 
     <scm>
