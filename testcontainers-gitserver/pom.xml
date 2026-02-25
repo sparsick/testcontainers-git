@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>testcontainers-gitserver</artifactId>
-    <name>Git Server for Testcontainers</name>
+    <name>Git Servers for Testcontainers</name>
 
     <dependencies>
         <dependency>

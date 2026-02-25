@@ -33,6 +33,7 @@
         <module>testcontainers-gitserver</module>
         <module>rewrite-testcontainers-gitserver</module>
         <module>testcontainers-git-bom</module>
+      <module>testcontainers-forgejo</module>
     </modules>
 
     <dependencyManagement>
