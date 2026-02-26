@@ -1,19 +1,22 @@
 package io.github.sparsick.testcontainers.gitserver.forgejo;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import org.apache.commons.io.IOUtils;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.api.RepositoryApi;
+import org.openapitools.client.api.UserApi;
+import org.openapitools.client.model.CreateKeyOption;
 import org.openapitools.client.model.CreateRepoOption;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.ExecConfig;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.utility.DockerImageName;
-import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
@@ -21,6 +24,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
     private String gitRepoName;
     private String initUserPassword = "init123";
     private String initUserName = "gitUser";
+    private SshIdentity sshClientIdentity;
 
 
     public ForgejoContainer(DockerImageName dockerImageName) {
@@ -47,7 +51,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      */
     public ForgejoContainer withInitUserName(String initUserName) {
         this.initUserName = initUserName;
-//        withEnv(GIT_PASSWORD_KEY, password);
         return this;
     }
 
@@ -61,7 +64,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      */
     public ForgejoContainer withInitUserPassword(String initUserPassword) {
         this.initUserPassword = initUserPassword;
-//        withEnv(GIT_PASSWORD_KEY, password);
         return this;
     }
 
@@ -76,6 +78,23 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      */
     public ForgejoContainer withGitRepo(String gitRepoName) {
         this.gitRepoName = gitRepoName;
+        return this;
+    }
+
+    /**
+     * Enabled SSH public key authentication.
+     *
+     * @return instance of the git server container
+     */
+    public ForgejoContainer withSshKeyAuth() {
+        try {
+            sshClientIdentity = new SshIdentity(
+                    IOUtils.resourceToString("/id_client", StandardCharsets.UTF_8),
+                    IOUtils.resourceToString("/id_client.pub", StandardCharsets.UTF_8),
+                    new byte[0]);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 
@@ -99,11 +118,31 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         try {
             configureAdminUser();
             configureGitRepository();
+            configureSshKeyAuth();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 //        collectHostKeyInformation();
 //        fixFilePermissions();
+    }
+
+    private void configureSshKeyAuth() throws ApiException {
+        if (sshClientIdentity != null) {
+            ApiClient apiClient = new ApiClient();
+            String basePath = String.format("http://%s:%d/api/v1", getHost(), getMappedPort(3000));
+
+            apiClient.setBasePath(basePath);
+            apiClient.setUsername(initUserName);
+            apiClient.setPassword(initUserPassword);
+
+            UserApi userApi = new UserApi(apiClient);
+            CreateKeyOption createKeyOption = new CreateKeyOption();
+            createKeyOption.setKey(sshClientIdentity.getPublicKey());
+            createKeyOption.setTitle("ssh-key");
+            userApi.userCurrentPostKey(createKeyOption);
+
+
+        }
     }
 
     private void configureAdminUser() throws IOException, InterruptedException {
@@ -112,7 +151,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         execConfigBuilder.user("git").command(command.split(" "));
         ExecResult execResult = execInContainer(execConfigBuilder.build());
         if (execResult.getExitCode() != 0) {
-            System.out.println("Failed to execute command: " + execResult.getStdout());
             throw new RuntimeException("Failed to configure admin user: " + execResult.getStderr());
         }
     }
@@ -132,4 +170,9 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         createRepoOption.setName(gitRepoName);
         repositoryApi.createCurrentUserRepo(createRepoOption);
     }
+
+    public SshIdentity getSshClientIdentity() {
+        return sshClientIdentity;
+    }
+
 }
