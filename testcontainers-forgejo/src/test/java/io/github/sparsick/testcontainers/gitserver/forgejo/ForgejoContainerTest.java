@@ -3,6 +3,7 @@ package io.github.sparsick.testcontainers.gitserver.forgejo;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.utility.DockerImageName;
 
+import java.net.URI;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +35,18 @@ class ForgejoContainerTest {
         List<Integer> exposedPorts = containerUnderTest.getExposedPorts();
         assertThat(exposedPorts).containsOnly(22);
     }
+
+    @Test
+    void gitRepoURI() {
+        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName");
+
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+        var gitPort = containerUnderTest.getMappedPort(22);
+        assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/gitUser/testRepoName.git");
+    }
+
 
 
 
