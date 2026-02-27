@@ -8,11 +8,11 @@ import org.openapitools.client.api.RepositoryApi;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.model.CreateKeyOption;
 import org.openapitools.client.model.CreateRepoOption;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.ExecConfig;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +25,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
     private String initUserPassword = "init123";
     private String initUserName = "gitUser";
     private SshIdentity sshClientIdentity;
+    private String pathToExistingRepo;
 
 
     public ForgejoContainer(DockerImageName dockerImageName) {
@@ -98,6 +99,12 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         return this;
     }
 
+    public ForgejoContainer withCopyExistingGitRepoToContainer(String pathToExistingRepo) {
+        this.pathToExistingRepo = pathToExistingRepo;
+        return this;
+    }
+
+
     /**
      * Return the SSH URI for git repo.
      *
@@ -117,6 +124,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         super.containerIsStarted(containerInfo);
         try {
             configureAdminUser();
+            createGitRepository();
             configureGitRepository();
             configureSshKeyAuth();
         } catch (Exception e) {
@@ -155,7 +163,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         }
     }
 
-    private void configureGitRepository() throws ApiException {
+    private void createGitRepository() throws ApiException {
         ApiClient apiClient = new ApiClient();
         String basePath = String.format("http://%s:%d/api/v1", getHost(), getMappedPort(3000));
 
@@ -171,8 +179,22 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         repositoryApi.createCurrentUserRepo(createRepoOption);
     }
 
+    private void configureGitRepository() {
+        try {
+            String gitRepoPath = String.format("/data/git/repositories/%s/%s.git/", initUserName, gitRepoName);
+            if (pathToExistingRepo != null) {
+                copyFileToContainer(MountableFile.forHostPath(pathToExistingRepo + "/.git"), gitRepoPath);
+                execInContainer("git", "config", "--bool", "core.bare", "true", gitRepoPath);
+                execInContainer("chown", "-R", "git:git", gitRepoPath);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Copying existing Git repository failed",e);
+        }
+    }
+
     public SshIdentity getSshClientIdentity() {
         return sshClientIdentity;
     }
+
 
 }

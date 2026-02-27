@@ -3,8 +3,10 @@ package io.github.sparsick.testcontainers.gitserver.forgejo;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -108,6 +111,37 @@ class ForgejoContainerTest {
                         .setTransportConfigCallback(configureWithSshIdentityAndNoHostVerification(containerUnderTest.getSshClientIdentity()))
                         .call()
         );
+    }
+
+    @Test
+    void copyExistingGitRepo(@TempDir File sampleRepo) throws GitAPIException, IOException {
+        initSampleRepo(sampleRepo, "src/test/resources/sampleRepo/testFile");
+
+        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE)
+                .withCopyExistingGitRepoToContainer(sampleRepo.getAbsolutePath());
+
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+
+        assertThatNoException().isThrownBy(() ->
+                Git.cloneRepository()
+                        .setURI(gitRepoURI.toString())
+                        .setDirectory(tempDir)
+                        .setBranch("main")
+                        .setTransportConfigCallback(configureWithSshIdentityAndNoHostVerification(containerUnderTest.getSshClientIdentity()))
+                        .call()
+        );
+
+        assertThat(new File(tempDir, "testFile")).exists();
+    }
+
+    private void initSampleRepo(File sampleRepo, String repoContent) throws IOException, GitAPIException {
+        FileUtils.copyFileToDirectory(new File(repoContent), sampleRepo);
+
+        Git repo = Git.init().setDirectory(sampleRepo).setInitialBranch("main").call();
+        repo.add().addFilepattern("testFile").call();
+        repo.commit().setSign(false).setAuthor("Sandra Parsick", "sample@example.com").setMessage("init").call();
     }
 
     @NotNull
