@@ -21,9 +21,9 @@ import java.nio.charset.StandardCharsets;
 public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("forgejoclone/forgejo");
-    private String gitRepoName;
-    private String initUserPassword = "init123";
-    private String initUserName = "gitUser";
+    private String gitRepoName = "testrepo";
+    private String userPassword = "init123";
+    private String userName = "gituser";
     private SshIdentity sshClientIdentity;
     private String pathToExistingRepo;
 
@@ -51,7 +51,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      * @return instance of the forgejo container
      */
     public ForgejoContainer withInitUserName(String initUserName) {
-        this.initUserName = initUserName;
+        this.userName = initUserName;
         return this;
     }
 
@@ -64,7 +64,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      * @return instance of the forgejo container
      */
     public ForgejoContainer withInitUserPassword(String initUserPassword) {
-        this.initUserPassword = initUserPassword;
+        this.userPassword = initUserPassword;
         return this;
     }
 
@@ -111,11 +111,14 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      * @return SSH URI
      */
     public URI getGitRepoURIAsSSH() {
-        return URI.create("ssh://git@" + getHost() + ":" + getMappedPort(22) + "/" + initUserName + "/" + gitRepoName + ".git");
+        if(sshClientIdentity == null) {
+            throw new IllegalStateException("No ssh client identity provided");
+        }
+        return URI.create("ssh://git@" + getHost() + ":" + getMappedPort(22) + "/" + userName + "/" + gitRepoName + ".git");
     }
 
     public URI getGitRepoURIAsHTTP() {
-        return URI.create("http://" + getHost() + ":" + getMappedPort(3000) + "/" + initUserName + "/" + gitRepoName + ".git");
+        return URI.create("http://" + getHost() + ":" + getMappedPort(3000) + "/" + userName + "/" + gitRepoName + ".git");
     }
 
 
@@ -130,8 +133,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        collectHostKeyInformation();
-//        fixFilePermissions();
     }
 
     private void configureSshKeyAuth() throws ApiException {
@@ -140,8 +141,8 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
             String basePath = String.format("http://%s:%d/api/v1", getHost(), getMappedPort(3000));
 
             apiClient.setBasePath(basePath);
-            apiClient.setUsername(initUserName);
-            apiClient.setPassword(initUserPassword);
+            apiClient.setUsername(userName);
+            apiClient.setPassword(userPassword);
 
             UserApi userApi = new UserApi(apiClient);
             CreateKeyOption createKeyOption = new CreateKeyOption();
@@ -154,7 +155,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
     }
 
     private void configureAdminUser() throws IOException, InterruptedException {
-        String command = String.format("forgejo admin user create --username %s --password %s --email admin@example.com --admin",  initUserName, initUserPassword);
+        String command = String.format("forgejo admin user create --username %s --password %s --email admin@example.com --admin", userName, userPassword);
         ExecConfig.ExecConfigBuilder execConfigBuilder = ExecConfig.builder();
         execConfigBuilder.user("git").command(command.split(" "));
         ExecResult execResult = execInContainer(execConfigBuilder.build());
@@ -168,8 +169,8 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         String basePath = String.format("http://%s:%d/api/v1", getHost(), getMappedPort(3000));
 
         apiClient.setBasePath(basePath);
-        apiClient.setUsername(initUserName);
-        apiClient.setPassword(initUserPassword);
+        apiClient.setUsername(userName);
+        apiClient.setPassword(userPassword);
 
 
         RepositoryApi repositoryApi = new RepositoryApi(apiClient);
@@ -181,7 +182,7 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
     private void configureGitRepository() {
         try {
-            String gitRepoPath = String.format("/data/git/repositories/%s/%s.git/", initUserName, gitRepoName);
+            String gitRepoPath = String.format("/data/git/repositories/%s/%s.git/", userName, gitRepoName);
             if (pathToExistingRepo != null) {
                 copyFileToContainer(MountableFile.forHostPath(pathToExistingRepo + "/.git"), gitRepoPath);
                 execInContainer("git", "config", "--bool", "core.bare", "true", gitRepoPath);

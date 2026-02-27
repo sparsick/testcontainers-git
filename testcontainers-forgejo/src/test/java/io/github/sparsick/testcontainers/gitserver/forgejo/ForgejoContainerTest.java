@@ -114,6 +114,16 @@ class ForgejoContainerTest {
     }
 
     @Test
+    void checkSetupGitRepoViaSSH_nowSshKeyAuthConfigured() {
+        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName");
+
+        containerUnderTest.start();
+
+        assertThatThrownBy(() -> containerUnderTest.getGitRepoURIAsSSH()).isInstanceOf(IllegalStateException.class);
+    }
+
+
+    @Test
     void copyExistingGitRepo(@TempDir File sampleRepo) throws GitAPIException, IOException {
         initSampleRepo(sampleRepo, "src/test/resources/sampleRepo/testFile");
 
