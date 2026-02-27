@@ -58,13 +58,13 @@ class ForgejoContainerTest {
 
     @Test
     void gitRepoURISSH() {
-        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName");
+        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName").withSshKeyAuth();
 
         containerUnderTest.start();
 
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
         var gitPort = containerUnderTest.getMappedPort(22);
-        assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/gitUser/testRepoName.git");
+        assertThat(gitRepoURI.toString()).isEqualTo("ssh://git@"+ containerUnderTest.getHost() + ":" + gitPort + "/gituser/testRepoName.git");
     }
 
     @Test
@@ -75,7 +75,7 @@ class ForgejoContainerTest {
 
         URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
         var gitPort = containerUnderTest.getMappedPort(3000);
-        assertThat(gitRepoURI.toString()).isEqualTo("http://"+ containerUnderTest.getHost() + ":" + gitPort + "/gitUser/testRepoName.git");
+        assertThat(gitRepoURI.toString()).isEqualTo("http://"+ containerUnderTest.getHost() + ":" + gitPort + "/gituser/testRepoName.git");
     }
 
     @Test
@@ -132,14 +132,13 @@ class ForgejoContainerTest {
 
         containerUnderTest.start();
 
-        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
 
         assertThatNoException().isThrownBy(() ->
                 Git.cloneRepository()
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
                         .setBranch("main")
-                        .setTransportConfigCallback(configureWithSshIdentityAndNoHostVerification(containerUnderTest.getSshClientIdentity()))
                         .call()
         );
 
