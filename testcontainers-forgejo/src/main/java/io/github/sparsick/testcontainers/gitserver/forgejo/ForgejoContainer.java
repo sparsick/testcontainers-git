@@ -2,8 +2,10 @@ package io.github.sparsick.testcontainers.gitserver.forgejo;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
+import org.openapitools.client.api.AdminApi;
 import org.openapitools.client.api.RepositoryApi;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.model.CreateKeyOption;
@@ -24,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("forgejoclone/forgejo");
-    private String gitRepoName = "testrepo";
+    private String gitRepoName = "testRepo";
     private String userPassword = "init123";
     private String userName = "gituser";
     private SshIdentity sshClientIdentity;
@@ -112,6 +114,9 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
      * @return instance of the forgejo container
      */
     public ForgejoContainer withCopyExistingGitRepoToContainer(String pathToExistingRepo) {
+        if (!StringUtils.isAllLowerCase(gitRepoName)) {
+            throw new IllegalArgumentException("Git repo name ('gitRepoName') must be lowercase if you want to copy existing repo");
+        }
         this.pathToExistingRepo = pathToExistingRepo;
         return this;
     }
@@ -154,7 +159,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         super.containerIsStarted(containerInfo);
         try {
             configureAdminUser();
-            createGitRepository();
             configureGitRepository();
             configureSshKeyAuth();
         } catch (Exception e) {
@@ -191,7 +195,46 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         }
     }
 
-    private void createGitRepository() throws ApiException {
+    private void createGitRepository()  {
+        try {
+            ApiClient apiClient = new ApiClient();
+            String basePath = String.format("http://%s:%d/api/v1", getHost(), getMappedPort(3000));
+
+            apiClient.setBasePath(basePath);
+            apiClient.setUsername(userName);
+            apiClient.setPassword(userPassword);
+
+
+            RepositoryApi repositoryApi = new RepositoryApi(apiClient);
+            CreateRepoOption createRepoOption = new CreateRepoOption();
+            createRepoOption.setName(gitRepoName);
+            repositoryApi.createCurrentUserRepo(createRepoOption);
+        } catch (ApiException e) {
+            throw new RuntimeException("Creating git repository failed",e);
+        }
+    }
+
+    private void configureGitRepository() {
+        if (pathToExistingRepo != null) {
+            copyExistingGitRepository();
+        } else {
+            createGitRepository();
+        }
+    }
+
+    private void copyExistingGitRepository(){
+        String gitRepoPath = String.format("/data/git/repositories/%s/%s.git/", userName, gitRepoName);
+        try {
+            execInContainer("mkdir", "-p", gitRepoPath);
+            copyFileToContainer(MountableFile.forHostPath(pathToExistingRepo + "/.git"), gitRepoPath);
+            execInContainer("chown", "-R", "git:git", gitRepoPath);
+            adoptImportedGitRepository();
+        } catch (IOException | ApiException | InterruptedException e) {
+            throw new RuntimeException("Copying existing Git repository failed",e);
+        }
+    }
+
+    private void adoptImportedGitRepository() throws ApiException {
         ApiClient apiClient = new ApiClient();
         String basePath = String.format("http://%s:%d/api/v1", getHost(), getMappedPort(3000));
 
@@ -200,24 +243,8 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         apiClient.setPassword(userPassword);
 
 
-        RepositoryApi repositoryApi = new RepositoryApi(apiClient);
-
-        CreateRepoOption createRepoOption = new CreateRepoOption();
-        createRepoOption.setName(gitRepoName);
-        repositoryApi.createCurrentUserRepo(createRepoOption);
-    }
-
-    private void configureGitRepository() {
-        try {
-            String gitRepoPath = String.format("/data/git/repositories/%s/%s.git/", userName, gitRepoName);
-            if (pathToExistingRepo != null) {
-                copyFileToContainer(MountableFile.forHostPath(pathToExistingRepo + "/.git"), gitRepoPath);
-                execInContainer("git", "config", "--bool", "core.bare", "true", gitRepoPath);
-                execInContainer("chown", "-R", "git:git", gitRepoPath);
-            }
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Copying existing Git repository failed",e);
-        }
+        AdminApi adminApi = new AdminApi(apiClient);
+        adminApi.adminAdoptRepository(userName, gitRepoName);
     }
 
 

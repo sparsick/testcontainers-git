@@ -8,6 +8,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
 import org.eclipse.jgit.util.FS;
@@ -82,7 +83,7 @@ class ForgejoContainerTest {
     @ParameterizedTest
     @EnumSource(ForgejoVersions.class)
     void checkSetupGitRepoViaHTTP(ForgejoVersions forgejoVersion) {
-        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName()).withGitRepo("testRepoName");
+        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName());
 
         containerUnderTest.start();
 
@@ -100,7 +101,7 @@ class ForgejoContainerTest {
     @ParameterizedTest
     @EnumSource(ForgejoVersions.class)
     void checkSetupGitRepoViaSSH(ForgejoVersions forgejoVersion) {
-        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName()).withGitRepo("testRepoName").withSshKeyAuth();
+        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName()).withSshKeyAuth();
 
         containerUnderTest.start();
 
@@ -117,8 +118,8 @@ class ForgejoContainerTest {
     }
 
     @Test
-    void checkSetupGitRepoViaSSH_nowSshKeyAuthConfigured() {
-        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName");
+    void checkSetupGitRepoViaSSH_noSshKeyAuthConfigured() {
+        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE);
 
         containerUnderTest.start();
 
@@ -132,6 +133,7 @@ class ForgejoContainerTest {
         initSampleRepo(sampleRepo, "src/test/resources/sampleRepo/testFile");
 
         var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName())
+                .withGitRepo("testrepo")
                 .withCopyExistingGitRepoToContainer(sampleRepo.getAbsolutePath());
 
         containerUnderTest.start();
@@ -143,11 +145,20 @@ class ForgejoContainerTest {
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
                         .setBranch("main")
+                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider("gituser", "init123"))
                         .call()
         );
 
         assertThat(new File(tempDir, "testFile")).exists();
     }
+
+    @Test
+    void copyExistingGitRepo_gitRepoNameMustBeLowercase() {
+        assertThatThrownBy(() -> new ForgejoContainer(LATEST_FORGEJO_IMAGE)
+                .withGitRepo("testRepo")
+                .withCopyExistingGitRepoToContainer("src/test/resources")).isInstanceOf(IllegalArgumentException.class);
+    }
+
 
     private void initSampleRepo(File sampleRepo, String repoContent) throws IOException, GitAPIException {
         FileUtils.copyFileToDirectory(new File(repoContent), sampleRepo);
