@@ -115,9 +115,9 @@ public class GitServerContainer extends GenericContainer<GitServerContainer> {
     @Override
     protected void containerIsStarted(InspectContainerResponse containerInfo) {
         super.containerIsStarted(containerInfo);
-            configureGitRepository();
-            collectHostKeyInformation();
-            fixFilePermissions();
+        configureGitRepository();
+        collectHostKeyInformation();
+        fixFilePermissions();
     }
 
     /**

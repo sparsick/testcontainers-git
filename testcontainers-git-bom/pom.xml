@@ -11,7 +11,7 @@
 
     <artifactId>testcontainers-git-bom</artifactId>
     <packaging>pom</packaging>
-    <name>BOM for Git Server for Testcontainers</name>
+    <name>BOM for Git Servers for Testcontainers</name>
 
 
     <dependencyManagement>
@@ -24,7 +24,12 @@
             <dependency>
                 <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
                 <artifactId>testcontainers-gitserver</artifactId>
-                <version>0.14.0-SNAPSHOT</version>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+                <artifactId>testcontainers-forgejo</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
