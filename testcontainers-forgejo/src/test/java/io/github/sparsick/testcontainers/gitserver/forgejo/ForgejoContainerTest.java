@@ -15,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ForgejoContainerTest {
 
-    private static final DockerImageName LATEST_FORGEJO_IMAGE = new DockerImageName("forgejoclone/forgejo", "14.0.2");
+    private static final DockerImageName LATEST_FORGEJO_IMAGE = ForgejoVersions.V14_0_2.getDockerImageName();
 
     @TempDir(cleanup = CleanupMode.NEVER)
     private File tempDir;
@@ -78,9 +79,10 @@ class ForgejoContainerTest {
         assertThat(gitRepoURI.toString()).isEqualTo("http://"+ containerUnderTest.getHost() + ":" + gitPort + "/gituser/testRepoName.git");
     }
 
-    @Test
-    void checkSetupGitRepoViaHTTP() {
-        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName");
+    @ParameterizedTest
+    @EnumSource(ForgejoVersions.class)
+    void checkSetupGitRepoViaHTTP(ForgejoVersions forgejoVersion) {
+        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName()).withGitRepo("testRepoName");
 
         containerUnderTest.start();
 
@@ -95,9 +97,10 @@ class ForgejoContainerTest {
         );
     }
 
-    @Test
-    void checkSetupGitRepoViaSSH() {
-        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withGitRepo("testRepoName").withSshKeyAuth();
+    @ParameterizedTest
+    @EnumSource(ForgejoVersions.class)
+    void checkSetupGitRepoViaSSH(ForgejoVersions forgejoVersion) {
+        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName()).withGitRepo("testRepoName").withSshKeyAuth();
 
         containerUnderTest.start();
 
@@ -123,11 +126,12 @@ class ForgejoContainerTest {
     }
 
 
-    @Test
-    void copyExistingGitRepo(@TempDir File sampleRepo) throws GitAPIException, IOException {
+    @ParameterizedTest
+    @EnumSource(ForgejoVersions.class)
+    void copyExistingGitRepo(ForgejoVersions forgejoVersion, @TempDir File sampleRepo) throws GitAPIException, IOException {
         initSampleRepo(sampleRepo, "src/test/resources/sampleRepo/testFile");
 
-        var containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE)
+        var containerUnderTest = new ForgejoContainer(forgejoVersion.getDockerImageName())
                 .withCopyExistingGitRepoToContainer(sampleRepo.getAbsolutePath());
 
         containerUnderTest.start();

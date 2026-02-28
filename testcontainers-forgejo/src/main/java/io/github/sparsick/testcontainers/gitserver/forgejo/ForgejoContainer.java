@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * forgejoclone/forgejo
+ */
 public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
     private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME = DockerImageName.parse("forgejoclone/forgejo");
