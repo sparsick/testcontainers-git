@@ -31,8 +31,12 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
-        <!-- needed for open api generted client -->
+        <!-- needed for open api generated client -->
         <!-- @Nullable annotation -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -64,11 +68,6 @@
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind-version}</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.fasterxml.jackson.jaxrs</groupId>-->
-        <!--            <artifactId>jackson-jaxrs-json-provider</artifactId>-->
-        <!--            <version>${jackson-version}</version>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>

@@ -274,6 +274,7 @@ use `withCopyExistingGitRepoToContainer`:
 @Container
 private ForgejoContainer containerUnderTest =
         new ForgejoContainer(ForgejoVersions.V14_0_2.getDockerImageName())
+                .withGitRepo("myrepo")
                 .withCopyExistingGitRepoToContainer("src/test/resources/sampleRepo");
 
 @Test
@@ -284,11 +285,14 @@ void checkExistingRepoIsAvailable() {
             .setURI(gitRepoURI.toString())
             .setDirectory(tempDir)
             .setBranch("main")
+            .setCredentialsProvider(new UsernamePasswordCredentialsProvider("gituser", "init123"))
             .call();
 
     assertThat(new File(tempDir, "myExistingFile.txt")).exists();
 }
 ````
+
+> **Note:** Using `withCopyExistingGitRepoToContainer()` without a lowercase gitRepoName throws an `IllegalArgumentException`.
 
 #### Choosing a Forgejo Version
 
