@@ -19,7 +19,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 /**
- * forgejoclone/forgejo
+ * Container for a Forgejo Git server based on the Docker image "forgejoclone/forgejo".
  */
 public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
@@ -30,7 +30,11 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
     private SshIdentity sshClientIdentity;
     private String pathToExistingRepo;
 
-
+    /**
+     * Creates a new {@code ForgejoContainer} with the given Docker image.
+     *
+     * @param dockerImageName the Docker image to use; must be compatible with {@code forgejoclone/forgejo}
+     */
     public ForgejoContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
         dockerImageName.assertCompatibleWith(DEFAULT_DOCKER_IMAGE_NAME);
@@ -41,8 +45,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
         waitingFor(Wait.forListeningPorts(3000))
                 .addExposedPorts(3000);
-
-
     }
 
     /**
@@ -70,7 +72,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         this.userPassword = initUserPassword;
         return this;
     }
-
 
     /**
      * Override the default git repository name.
@@ -102,6 +103,14 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         return this;
     }
 
+    /**
+     * Copy an existing git repository to the container.
+     * <p>
+     * The repository at the given path is copied into the container and configured as a bare repository.
+     *
+     * @param pathToExistingRepo path to the existing git repository on the host (relative to the project root)
+     * @return instance of the forgejo container
+     */
     public ForgejoContainer withCopyExistingGitRepoToContainer(String pathToExistingRepo) {
         this.pathToExistingRepo = pathToExistingRepo;
         return this;
@@ -120,10 +129,25 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         return URI.create("ssh://git@" + getHost() + ":" + getMappedPort(22) + "/" + userName + "/" + gitRepoName + ".git");
     }
 
+    /**
+     * Return the HTTP URI for the git repository.
+     *
+     * @return HTTP URI
+     */
     public URI getGitRepoURIAsHTTP() {
         return URI.create("http://" + getHost() + ":" + getMappedPort(3000) + "/" + userName + "/" + gitRepoName + ".git");
     }
 
+    /**
+     * Return the identity information for SSH public key authentication.
+     * <p>
+     * If {@link #withSshKeyAuth()} was not called, returns {@code null}.
+     *
+     * @return identity information for public key authentication, or {@code null} if not configured
+     */
+    public SshIdentity getSshClientIdentity() {
+        return sshClientIdentity;
+    }
 
     @Override
     protected void containerIsStarted(InspectContainerResponse containerInfo) {
@@ -194,10 +218,6 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Copying existing Git repository failed",e);
         }
-    }
-
-    public SshIdentity getSshClientIdentity() {
-        return sshClientIdentity;
     }
 
 
