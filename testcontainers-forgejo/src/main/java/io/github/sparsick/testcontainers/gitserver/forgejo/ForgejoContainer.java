@@ -154,10 +154,24 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         return sshClientIdentity;
     }
 
+    /**
+     * Returns the username of the init admin user.
+     * <p>
+     * If {@link #withInitUserName(String)} was not called, the default {@code "gituser"} is returned.
+     *
+     * @return the init admin username
+     */
     public String getUserName() {
         return this.userName;
     }
 
+    /**
+     * Returns the password of the init admin user.
+     * <p>
+     * If {@link #withInitUserPassword(String)} was not called, the default {@code "init123"} is returned.
+     *
+     * @return the init admin user password
+     */
     public String getUserPassword() {
         return this.userPassword;
     }
