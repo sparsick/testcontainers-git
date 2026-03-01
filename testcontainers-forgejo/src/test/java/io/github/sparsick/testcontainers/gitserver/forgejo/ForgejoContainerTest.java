@@ -80,6 +80,20 @@ class ForgejoContainerTest {
         assertThat(gitRepoURI.toString()).isEqualTo("http://"+ containerUnderTest.getHost() + ":" + gitPort + "/gituser/testRepoName.git");
     }
 
+    @Test
+    void withUsername(){
+        var  containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withInitUserName("testUser");
+
+        assertThat(containerUnderTest.getUserName()).isEqualTo("testUser");
+    }
+
+    @Test
+    void withPassword(){
+        var  containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE).withInitUserPassword("password");
+
+        assertThat(containerUnderTest.getUserPassword()).isEqualTo("password");
+    }
+
     @ParameterizedTest
     @EnumSource(ForgejoVersions.class)
     void checkSetupGitRepoViaHTTP(ForgejoVersions forgejoVersion) {
@@ -145,7 +159,7 @@ class ForgejoContainerTest {
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
                         .setBranch("main")
-                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider("gituser", "init123"))
+                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider(containerUnderTest.getUserName(), containerUnderTest.getUserPassword()))
                         .call()
         );
 
