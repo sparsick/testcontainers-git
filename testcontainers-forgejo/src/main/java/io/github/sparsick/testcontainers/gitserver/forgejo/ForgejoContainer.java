@@ -154,6 +154,14 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         return sshClientIdentity;
     }
 
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public String getUserPassword() {
+        return this.userPassword;
+    }
+
     @Override
     protected void containerIsStarted(InspectContainerResponse containerInfo) {
         super.containerIsStarted(containerInfo);
@@ -250,6 +258,4 @@ public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
         AdminApi adminApi = new AdminApi(apiClient);
         adminApi.adminAdoptRepository(userName, gitRepoName);
     }
-
-
 }
