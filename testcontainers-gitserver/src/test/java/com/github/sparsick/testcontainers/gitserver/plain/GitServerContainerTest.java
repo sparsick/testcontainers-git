@@ -125,7 +125,6 @@ public class GitServerContainerTest {
                 Git.cloneRepository()
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
-                        .setBranch("main")
                         .setTransportConfigCallback(GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
                         .call()
         );
@@ -148,7 +147,6 @@ public class GitServerContainerTest {
                 Git.cloneRepository()
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
-                        .setBranch("main")
                         .setTransportConfigCallback(GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
                         .call()
         );
@@ -169,7 +167,6 @@ public class GitServerContainerTest {
                 Git.cloneRepository()
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
-                        .setBranch("main")
                         .setTransportConfigCallback(GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
                         .call()
         );
@@ -188,7 +185,6 @@ public class GitServerContainerTest {
                 Git.cloneRepository()
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
-                        .setBranch("main")
                         .setTransportConfigCallback(configureWithSshIdentityAndNoHostVerification(containerUnderTest.getSshClientIdentity()))
                         .call()
         );
@@ -209,10 +205,28 @@ public class GitServerContainerTest {
                 Git.cloneRepository()
                         .setURI(gitRepoURI.toString())
                         .setDirectory(tempDir)
-                        .setBranch("main")
                         .setTransportConfigCallback(configureWithSshIdentityAndHostKey(containerUnderTest.getSshClientIdentity(), containerUnderTest.getHostKey()))
                         .call()
         );
+    }
+
+    @ParameterizedTest
+    @EnumSource(GitServerVersions.class)
+    void defaultBranch(GitServerVersions gitServer) throws GitAPIException, IOException {
+        var containerUnderTest = new GitServerContainer(gitServer.getDockerImageName());
+
+        containerUnderTest.start();
+
+        URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
+
+        Git repo = Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setTransportConfigCallback(GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
+                .call();
+
+        String currentBranch = repo.getRepository().getBranch();
+        assertThat(currentBranch).isEqualTo("main");
     }
 
     @NotNull
