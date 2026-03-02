@@ -176,7 +176,7 @@ public class GitHttpServerContainerUsedInJUnit5Test {
 
 ### Forgejo Server (`testcontainers-forgejo`)
 
-Forgejo server is supported since version 0.15.0.
+Forgejo server is supported since version 0.14.0.
 The following samples show how to use the Forgejo git server container in a JUnit 5 test.
 The container exposes two protocols:
 
