@@ -127,6 +127,9 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/forgejo-api-14.0.2+gitea-1.22.0/swagger.v1.json</inputSpec>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
                             <generatorName>java</generatorName>
                             <library>apache-httpclient</library>
                             <generateApiTests>false</generateApiTests>
