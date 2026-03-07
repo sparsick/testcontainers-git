@@ -151,6 +151,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.gaul</groupId>
+                <artifactId>modernizer-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <javaVersion>${maven.compiler.release}</javaVersion>
+                    <ignorePackages>
+                        <ignorePackage>org.openapitools.client</ignorePackage>
+                    </ignorePackages>
+                    <includeTestClasses>false</includeTestClasses>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>modernizer</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>modernizer</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
