@@ -31,6 +31,11 @@
                 <artifactId>testcontainers-forgejo</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+                <artifactId>testcontainers-gitea</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
