@@ -3,7 +3,10 @@
 [![Java CI with Maven](https://github.com/sparsick/testcontainers-git/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/sparsick/testcontainers-git/actions/workflows/maven.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sparsick.testcontainers.gitserver/testcontainers-gitserver/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.sparsick.testcontainers.gitserver/testcontainers-gitserver)
 
-This project contains a [Testcontainers](https://www.testcontainers.org/) implementation for a plain git server based on the Docker image `rockstorm/git-server` ([Github Project](https://github.com/rockstorm101/git-server-docker)) and for a forgejo git server based on the Docker image `forgejoclone/forgejo` ([Codeberg Project](https://codeberg.org/forgejoclone/forgejo)).
+This project contains [Testcontainers](https://www.testcontainers.org/) implementations for several git (management) server:
+- a plain git server based on the Docker image `rockstorm/git-server` ([Github Project](https://github.com/rockstorm101/git-server-docker)) (module `testcontainers-gitserver`),
+- for a forgejo git server based on the Docker image `forgejoclone/forgejo` ([Codeberg Project](https://codeberg.org/forgejoclone/forgejo)) (module `testcontainers-forgejo`) and
+- for a gitea git server based on the Docker image `gitea/gitea` ([Github Project](https://github.com/go-gitea/gitea)) (module `testcontainers-gitea`).
 
 It sets up the git server with a ready to use repository with the default name `testRepo`. 
 The repository name can be overwritten.
@@ -37,6 +40,11 @@ The port is set by testcontainers' mechanism.
          <artifactId>testcontainers-forgejo</artifactId>
          <scope>test</scope>
      </dependency>
+     <dependency>
+         <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+         <artifactId>testcontainers-gitea</artifactId>
+         <scope>test</scope>
+     </dependency>
 </dependencies>
 ```
 
@@ -51,6 +59,7 @@ dependencyManagement {
 dependencies {
     testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver'
     testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-forgejo'
+    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitea'
 }
 ```
 
@@ -174,10 +183,13 @@ public class GitHttpServerContainerUsedInJUnit5Test {
 }
 ````
 
-### Forgejo Server (`testcontainers-forgejo`)
+### Forgejo Server (`testcontainers-forgejo`) / Gitea Server (`testcontainers-gitea`)
 
-Forgejo server is supported since version 0.14.0.
-The following samples show how to use the Forgejo git server container in a JUnit 5 test.
+Forgejo server is supported since version 0.14.0 and the gitea server is supported since version 1.15.0.
+
+The following samples show how to use the Forgejo git server container or Gitea git server container in a JUnit 5 test.
+If you want to use the gitea server, you have to use the `testcontainers-gitea` dependency instead of the `testcontainers-forgejo` dependency and replace `ForgejoContainer` with `GiteaContainer`.
+
 The container exposes two protocols:
 
 - Git over **HTTP** (port `3000`)
@@ -294,7 +306,7 @@ void checkExistingRepoIsAvailable() {
 
 > **Note:** Using `withCopyExistingGitRepoToContainer()` without a lowercase gitRepoName throws an `IllegalArgumentException`.
 
-#### Choosing a Forgejo Version
+#### Choosing a Forgejo/Gitea Version
 
 Use the `ForgejoVersions` enum to pin a specific image version:
 
@@ -303,6 +315,15 @@ new ForgejoContainer(ForgejoVersions.V13_0_5.getDockerImageName())
 new ForgejoContainer(ForgejoVersions.V12_0_4.getDockerImageName())
 new ForgejoContainer(ForgejoVersions.V11_0_10.getDockerImageName())
 // ... and more, see ForgejoVersions for the full list
+````
+
+For Gitea, use the `GiteaVersions` enum to pin a specific image version:
+
+````java
+new GiteaContainer(GiteaVersions.V1_15_0.getDockerImageName())
+new GiteaContainer(GiteaVersions.V1_14_0.getDockerImageName())
+new GiteaContainer(GiteaVersions.V1_13_0.getDockerImageName())
+// ... and more, see GiteaVersions for the full list
 ````
 
 ## Migration Guide

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+        <artifactId>testcontainers-git-parent</artifactId>
+        <version>0.15.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>testcontainers-gitea</artifactId>
+    <name>Gitea Server for Testcontainers</name>
+
+    <properties>
+        <httpclient-version>5.6</httpclient-version>
+        <jackson-databind-nullable-version>0.2.9</jackson-databind-nullable-version>
+        <jakarta-annotation-version>3.0.0</jakarta-annotation-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- needed for open api generated client -->
+        <!-- @Nullable annotation -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+
+        <!-- HTTP client: apache client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>${httpclient-version}</version>
+        </dependency>
+
+        <!-- JSON processing: jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${jakarta-annotation-version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
+            <version>${jgit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.20.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/gitea-1.25.4/swagger.v1.json</inputSpec>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+                            <generatorName>java</generatorName>
+                            <library>apache-httpclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
