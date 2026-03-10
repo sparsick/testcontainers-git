@@ -34,6 +34,7 @@
         <module>rewrite-testcontainers-gitserver</module>
         <module>testcontainers-git-bom</module>
         <module>testcontainers-forgejo</module>
+        <module>testcontainers-gitea</module>
     </modules>
 
     <dependencyManagement>
