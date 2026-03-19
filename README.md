@@ -1,7 +1,8 @@
 # testcontainers-git
 [![codecov](https://codecov.io/gh/sparsick/testcontainers-git/branch/main/graph/badge.svg?token=F9R60M53IL)](https://codecov.io/gh/sparsick/testcontainers-git)
 [![Java CI with Maven](https://github.com/sparsick/testcontainers-git/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/sparsick/testcontainers-git/actions/workflows/maven.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sparsick.testcontainers.gitserver/testcontainers-gitserver/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.sparsick.testcontainers.gitserver/testcontainers-gitserver)
+![Maven Central Version](https://img.shields.io/maven-central/v/io.github.sparsick.testcontainers.gitserver/testcontainers-git-parent)
+
 
 This project contains [Testcontainers](https://www.testcontainers.org/) implementations for several git (management) server:
 - a plain git server based on the Docker image `rockstorm/git-server` ([Github Project](https://github.com/rockstorm101/git-server-docker)) (module `testcontainers-gitserver`),
