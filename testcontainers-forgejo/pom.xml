@@ -42,7 +42,6 @@
             <version>3.0.2</version>
         </dependency>
 
-
         <!-- HTTP client: apache client -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
