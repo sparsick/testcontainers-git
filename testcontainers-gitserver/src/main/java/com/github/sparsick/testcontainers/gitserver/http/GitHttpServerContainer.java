@@ -4,7 +4,6 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
-import org.jetbrains.annotations.NotNull;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.ImageFromDockerfile;
@@ -52,7 +51,6 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
     this.basicAuthenticationCredentials = basicAuthenticationCredentials;
   }
 
-  @NotNull
   private static Consumer<DockerfileBuilder> dockerfileBuilder(
       DockerImageName dockerImageName,
       BasicAuthenticationCredentials basicAuthenticationCredentials) {
@@ -89,7 +87,6 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
     };
   }
 
-  @NotNull
   private static String checkIfOpensslIsNeeded(
       BasicAuthenticationCredentials basicAuthenticationCredentials) {
     final String enableOpenssl;
@@ -101,7 +98,6 @@ public class GitHttpServerContainer extends GenericContainer<GitHttpServerContai
     return enableOpenssl;
   }
 
-  @NotNull
   private static String checkUpdateGit(DockerImageName dockerImageName) {
     final String updateGit;
     if ("2.36".compareTo(dockerImageName.getVersionPart()) == 0) {

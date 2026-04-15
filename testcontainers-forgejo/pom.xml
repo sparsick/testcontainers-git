@@ -12,6 +12,7 @@
 
     <properties>
         <httpclient-version>5.6</httpclient-version>
+        <httpcore-version>5.4</httpcore-version>
         <jackson-databind-nullable-version>0.2.10</jackson-databind-nullable-version>
         <jakarta-annotation-version>3.0.0</jakarta-annotation-version>
     </properties>
@@ -30,16 +31,16 @@
             <artifactId>testcontainers</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-
-        <!-- needed for open api generated client -->
-        <!-- @Nullable annotation -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
         <!-- HTTP client: apache client -->
@@ -47,6 +48,11 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>${httpclient-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5</artifactId>
+            <version>${httpcore-version}</version>
         </dependency>
 
         <!-- JSON processing: jackson -->
@@ -88,6 +94,11 @@
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
             <version>${jgit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
