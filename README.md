@@ -25,7 +25,8 @@ The port is set by testcontainers' mechanism.
             <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
             <artifactId>testcontainers-git-bom</artifactId>
             <version>RELEASE</version>
-            <scope>test</scope>
+            <type>pom</type>
+            <scope>import</scope>
         </dependency>
     </dependencies>
 </dependencyManagement>
