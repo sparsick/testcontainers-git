@@ -20,7 +20,6 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
 import org.eclipse.jgit.util.FS;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
@@ -206,7 +205,6 @@ class GiteaContainerTest {
         .call();
   }
 
-  @NotNull
   private TransportConfigCallback configureWithSshIdentityAndNoHostVerification(
       SshIdentity sshIdentity) {
     return transport -> {
