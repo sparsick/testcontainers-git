@@ -12,7 +12,7 @@
 
     <properties>
         <httpclient-version>5.6</httpclient-version>
-        <httpcore-version>5.4</httpcore-version>
+        <httpcore-version>5.4.2</httpcore-version>
         <jackson-databind-nullable-version>0.2.10</jackson-databind-nullable-version>
         <jakarta-annotation-version>3.0.0</jakarta-annotation-version>
     </properties>
