@@ -15,6 +15,10 @@ import org.testcontainers.utility.DockerImageName;
  * }</pre>
  */
 public enum GiteaVersions {
+
+  /** Gitea Docker image version 1.26.2. */
+  V1_26_2(DockerImageName.parse("gitea/gitea:1.26.2")),
+
   /** Gitea Docker image version 1.25.4. */
   V1_25_4(DockerImageName.parse("gitea/gitea:1.25.4")),
 
