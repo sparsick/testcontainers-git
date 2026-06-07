@@ -51,15 +51,38 @@ recipeList:
   - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitHttpServerContainer
 
 ---
-# REname packages io.github.sparsick com.github.sparsick,rename groupId
+
 type: specs.openrewrite.org/v1beta/recipe
-name: com.yourorg.ChangeManagedDependencyGroupIdAndArtifactIdExample
-displayName: Change Maven managed dependency groupId, artifactId and optionally the version example
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.Relocation
+description: Relocate package name and groupid to dev.parsick.
+displayName: Relocate packages and groupid
 recipeList:
-  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
-      oldGroupId: org.openrewrite.recipe
-      oldArtifactId: rewrite-testing-frameworks
-      newGroupId: corp.internal.openrewrite.recipe
-      newArtifactId: rewrite-testing-frameworks
-      newVersion: 2.0.0
-      versionPattern: '-jre'
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenameComPackage
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenameIoPackage
+  - org.openrewrite.xml.ChangeTagValue:
+      elementName: groupId
+      oldValue: io.github.sparsick.testcontainers.gitserver
+      newValue: dev.parsick.testcontainers.gitserver
+
+
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.RenameComPackage
+displayName: Rename package name example
+recipeList:
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: com.github.sparsick
+      newPackageName: dev.parsick
+      recursive: true
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.RenameIoPackage
+displayName: Rename package name example
+recipeList:
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: io.github.sparsick
+      newPackageName: dev.parsick
+      recursive: true
+
