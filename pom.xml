@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+    <groupId>dev.parsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-git-parent</artifactId>
     <version>0.16.0-SNAPSHOT</version>
 
@@ -208,7 +208,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.9.8.4</version>
                 <configuration>
-                    <onlyAnalyze>io.github.sparsick.testcontainers.gitserver.*</onlyAnalyze>
+                    <onlyAnalyze>dev.parsick.testcontainers.gitserver.*</onlyAnalyze>
                 </configuration>
                 <executions>
                     <execution>

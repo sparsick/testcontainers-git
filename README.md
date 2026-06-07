@@ -1,7 +1,7 @@
 # testcontainers-git
 [![codecov](https://codecov.io/gh/sparsick/testcontainers-git/branch/main/graph/badge.svg?token=F9R60M53IL)](https://codecov.io/gh/sparsick/testcontainers-git)
 [![Java CI with Maven](https://github.com/sparsick/testcontainers-git/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/sparsick/testcontainers-git/actions/workflows/maven.yml)
-![Maven Central Version](https://img.shields.io/maven-central/v/io.github.sparsick.testcontainers.gitserver/testcontainers-git-parent)
+![Maven Central Version](https://img.shields.io/maven-central/v/dev.parsick.testcontainers.gitserver/testcontainers-git-parent)
 
 
 This project contains [Testcontainers](https://www.testcontainers.org/) implementations for several git (management) server:
@@ -22,7 +22,7 @@ The port is set by testcontainers' mechanism.
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+            <groupId>dev.parsick.testcontainers.gitserver</groupId>
             <artifactId>testcontainers-git-bom</artifactId>
             <version>RELEASE</version>
             <type>pom</type>
@@ -33,17 +33,17 @@ The port is set by testcontainers' mechanism.
 
 <dependencies>
      <dependency>
-        <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+        <groupId>dev.parsick.testcontainers.gitserver</groupId>
         <artifactId>testcontainers-gitserver</artifactId>
         <scope>test</scope>
     </dependency>
      <dependency>
-         <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+         <groupId>dev.parsick.testcontainers.gitserver</groupId>
          <artifactId>testcontainers-forgejo</artifactId>
          <scope>test</scope>
      </dependency>
      <dependency>
-         <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+         <groupId>dev.parsick.testcontainers.gitserver</groupId>
          <artifactId>testcontainers-gitea</artifactId>
          <scope>test</scope>
      </dependency>
@@ -54,14 +54,14 @@ The port is set by testcontainers' mechanism.
 ```groovy
 dependencyManagement {
     imports {
-        mavenBom("io.github.sparsick.testcontainers.gitserver:testcontainers-git-bom:RELEASE")
+        mavenBom("dev.parsick.testcontainers.gitserver:testcontainers-git-bom:RELEASE")
 }
 
 
 dependencies {
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitserver'
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-forgejo'
-    testImplementation 'io.github.sparsick.testcontainers.gitserver:testcontainers-gitea'
+    testImplementation 'dev.parsick.testcontainers.gitserver:testcontainers-gitserver'
+    testImplementation 'dev.parsick.testcontainers.gitserver:testcontainers-forgejo'
+    testImplementation 'dev.parsick.testcontainers.gitserver:testcontainers-gitea'
 }
 ```
 
@@ -77,10 +77,10 @@ Currently, there exists two flavour:
 #### Git Server via SSH
 The following sample shows how to use the git server container via SSH in a JUnit 5 test:
 ````java
-import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
-import com.github.sparsick.testcontainers.gitserver.plain.GitServerContainer;
-import com.github.sparsick.testcontainers.gitserver.plain.SshHostKey;
-import com.github.sparsick.testcontainers.gitserver.plain.SshIdentity;
+import dev.parsick.testcontainers.gitserver.GitServerVersions;
+import plain.dev.parsick.testcontainers.gitserver.GitServerContainer;
+import plain.dev.parsick.testcontainers.gitserver.SshHostKey;
+import plain.dev.parsick.testcontainers.gitserver.SshIdentity;
 
 @Testcontainers
 public class GitServerContainerUsedInJUnit5Test {
@@ -117,8 +117,8 @@ public class GitServerContainerUsedInJUnit5Test {
 The following sample shows how to use the git server container via HTTP without Basic Authentication in a JUnit 5 test:
 
 ````java
-import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
-import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.GitServerVersions;
+import http.dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -139,9 +139,9 @@ public class GitHttpServerContainerUsedInJUnit5Test {
 The next sample shows how to use the git server container via HTTP with Basic Authentication in a JUnit 5 test:
 
 ````java
-import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
-import com.github.sparsick.testcontainers.gitserver.http.BasicAuthenticationCredentials;
-import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.GitServerVersions;
+import http.dev.parsick.testcontainers.gitserver.BasicAuthenticationCredentials;
+import http.dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -166,8 +166,8 @@ public class GitHttpServerContainerUsedInJUnit5Test {
 Since 0.9.0 it is possible to configure HTTP proxy, programmatically. 
 
 ````java
-import com.github.sparsick.testcontainers.gitserver.GitServerVersions;
-import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.GitServerVersions;
+import http.dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -200,8 +200,8 @@ The container exposes two protocols:
 #### Cloning via HTTP
 
 ````java
-import io.github.sparsick.testcontainers.gitserver.forgejo.ForgejoContainer;
-import io.github.sparsick.testcontainers.gitserver.forgejo.ForgejoVersions;
+import forgejo.dev.parsick.testcontainers.gitserver.ForgejoContainer;
+import forgejo.dev.parsick.testcontainers.gitserver.ForgejoVersions;
 
 @Testcontainers
 public class ForgejoContainerUsedInJUnit5Test {
@@ -231,9 +231,9 @@ SSH public key authentication must be enabled explicitly with `.withSshKeyAuth()
 The container registers the built-in key pair with Forgejo automatically on startup.
 
 ````java
-import io.github.sparsick.testcontainers.gitserver.forgejo.ForgejoContainer;
-import io.github.sparsick.testcontainers.gitserver.forgejo.ForgejoVersions;
-import io.github.sparsick.testcontainers.gitserver.forgejo.SshIdentity;
+import forgejo.dev.parsick.testcontainers.gitserver.ForgejoContainer;
+import forgejo.dev.parsick.testcontainers.gitserver.ForgejoVersions;
+import forgejo.dev.parsick.testcontainers.gitserver.SshIdentity;
 
 @Testcontainers
 public class ForgejoContainerUsedInJUnit5Test {
@@ -333,12 +333,12 @@ new GiteaContainer(GiteaVersions.V1_13_0.getDockerImageName())
 
 In 0.5.x the package structure has changed.
 The package `com.github.sparsick.testcontainers.gitserver` is split in `com.github.sparsick.testcontainers.gitserver.plain` and `com.github.sparsick.testcontainers.gitserver.http`.
-Making this migration easier, an OpenRewrite recipe `io.github.sparsick.testcontainers.gitserver.rewrite.recipe.SplitPackage` is provided.
+Making this migration easier, an OpenRewrite recipe `dev.parsick.testcontainers.gitserver.rewrite.recipe.SplitPackage` is provided.
 
 ````shell
 mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=io.github.sparsick.testcontainers.gitserver:rewrite-testcontainers-gitserver:RELEASE \
-  -Drewrite.activeRecipes=io.github.sparsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
+  -Drewrite.recipeArtifactCoordinates=dev.parsick.testcontainers.gitserver:rewrite-testcontainers-gitserver:RELEASE \
+  -Drewrite.activeRecipes=dev.parsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
 ````
 
 ## License
