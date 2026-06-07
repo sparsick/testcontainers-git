@@ -16,6 +16,9 @@ import org.testcontainers.utility.DockerImageName;
  */
 public enum ForgejoVersions {
 
+  /** Forgejo version 15.0.2 ({@code forgejoclone/forgejo:15.0.2}). */
+  V15_0_2(DockerImageName.parse("forgejoclone/forgejo:15.0.2")),
+
   /** Forgejo version 14.0.2 ({@code forgejoclone/forgejo:14.0.2}). */
   V14_0_2(DockerImageName.parse("forgejoclone/forgejo:14.0.2")),
 
