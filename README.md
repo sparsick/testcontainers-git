@@ -341,6 +341,39 @@ mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
   -Drewrite.activeRecipes=dev.parsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
 ````
 
+### Migration from 0.15.x to 0.16.x
+
+In 0.16.x the Maven group id and Java package names have been relocated to `dev.parsick`.
+
+Update the Maven coordinates from:
+
+````xml
+<groupId>io.github.sparsick.testcontainers.gitserver</groupId>
+````
+
+to:
+
+````xml
+<groupId>dev.parsick.testcontainers.gitserver</groupId>
+````
+
+Update imports from the old package names to the new `dev.parsick` package names, for example:
+
+````java
+import dev.parsick.testcontainers.gitserver.http.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.plain.GitServerContainer;
+import dev.parsick.testcontainers.gitserver.forgejo.ForgejoContainer;
+import dev.parsick.testcontainers.gitserver.gitea.GiteaContainer;
+````
+
+An OpenRewrite recipe is provided to automate the migration:
+
+````shell
+mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
+  -Drewrite.recipeArtifactCoordinates=dev.parsick.testcontainers.gitserver:rewrite-testcontainers-gitserver:RELEASE \
+  -Drewrite.activeRecipes=dev.parsick.testcontainers.gitserver.rewrite.recipe.Relocation
+````
+
 ## License
 
 MIT License
