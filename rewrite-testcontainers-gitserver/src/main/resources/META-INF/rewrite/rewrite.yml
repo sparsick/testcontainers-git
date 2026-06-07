@@ -1,6 +1,6 @@
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfBasicAuthenticationCredentials
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfBasicAuthenticationCredentials
 displayName: Rename package of BasicAuthenticationCredentials
 recipeList:
   - org.openrewrite.java.ChangeType:
@@ -10,7 +10,7 @@ recipeList:
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitServerContainer
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitServerContainer
 displayName: Rename package of GitServerContainer
 recipeList:
   - org.openrewrite.java.ChangeType:
@@ -20,7 +20,7 @@ recipeList:
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshHostKey
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshHostKey
 displayName: Rename package of SshHostKey
 recipeList:
   - org.openrewrite.java.ChangeType:
@@ -30,7 +30,7 @@ recipeList:
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
 displayName: Rename package of SshIdentity
 recipeList:
   - org.openrewrite.java.ChangeType:
@@ -40,12 +40,26 @@ recipeList:
 ---
 
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sparsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
+name: dev.parsick.testcontainers.gitserver.rewrite.recipe.SplitPackage
 description: Splitting origin package into plain and http specific ones.
 displayName: Split package
 recipeList:
-  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
-  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshHostKey
-  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitServerContainer
-  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfBasicAuthenticationCredentials
-  - io.github.sparsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitHttpServerContainer
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshIdentity
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfSshHostKey
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitServerContainer
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfBasicAuthenticationCredentials
+  - dev.parsick.testcontainers.gitserver.rewrite.recipe.RenamePackageOfGitHttpServerContainer
+
+---
+# REname packages io.github.sparsick com.github.sparsick,rename groupId
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.ChangeManagedDependencyGroupIdAndArtifactIdExample
+displayName: Change Maven managed dependency groupId, artifactId and optionally the version example
+recipeList:
+  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
+      oldGroupId: org.openrewrite.recipe
+      oldArtifactId: rewrite-testing-frameworks
+      newGroupId: corp.internal.openrewrite.recipe
+      newArtifactId: rewrite-testing-frameworks
+      newVersion: 2.0.0
+      versionPattern: '-jre'
