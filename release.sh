@@ -24,11 +24,11 @@ cd ..
 git commit -a -m "$release_version release"
 git tag -a "$release_version" -a -m "$release_version release"
 
-mvn deploy -DskipTests -Prelease
-
 cd relocation
 mvn deploy -DskipTests -Prelease
 cd ..
+
+mvn deploy -DskipTests -Prelease
 
 mvn versions:set "-DnewVersion=$new_version" -DgenerateBackupPoms=false
 
