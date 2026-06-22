@@ -78,9 +78,9 @@ Currently, there exists two flavour:
 The following sample shows how to use the git server container via SSH in a JUnit 5 test:
 ````java
 import dev.parsick.testcontainers.gitserver.GitServerVersions;
-import plain.dev.parsick.testcontainers.gitserver.GitServerContainer;
-import plain.dev.parsick.testcontainers.gitserver.SshHostKey;
-import plain.dev.parsick.testcontainers.gitserver.SshIdentity;
+import dev.parsick.testcontainers.gitserver.GitServerContainer;
+import dev.parsick.testcontainers.gitserver.SshHostKey;
+import dev.parsick.testcontainers.gitserver.SshIdentity;
 
 @Testcontainers
 public class GitServerContainerUsedInJUnit5Test {
@@ -118,7 +118,7 @@ The following sample shows how to use the git server container via HTTP without 
 
 ````java
 import dev.parsick.testcontainers.gitserver.GitServerVersions;
-import http.dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -140,8 +140,8 @@ The next sample shows how to use the git server container via HTTP with Basic Au
 
 ````java
 import dev.parsick.testcontainers.gitserver.GitServerVersions;
-import http.dev.parsick.testcontainers.gitserver.BasicAuthenticationCredentials;
-import http.dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.BasicAuthenticationCredentials;
+import dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -167,7 +167,7 @@ Since 0.9.0 it is possible to configure HTTP proxy, programmatically.
 
 ````java
 import dev.parsick.testcontainers.gitserver.GitServerVersions;
-import http.dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
+import dev.parsick.testcontainers.gitserver.GitHttpServerContainer;
 
 @Testcontainers
 public class GitHttpServerContainerUsedInJUnit5Test {
@@ -200,8 +200,8 @@ The container exposes two protocols:
 #### Cloning via HTTP
 
 ````java
-import forgejo.dev.parsick.testcontainers.gitserver.ForgejoContainer;
-import forgejo.dev.parsick.testcontainers.gitserver.ForgejoVersions;
+import dev.parsick.testcontainers.gitserver.ForgejoContainer;
+import dev.parsick.testcontainers.gitserver.ForgejoVersions;
 
 @Testcontainers
 public class ForgejoContainerUsedInJUnit5Test {
@@ -231,9 +231,9 @@ SSH public key authentication must be enabled explicitly with `.withSshKeyAuth()
 The container registers the built-in key pair with Forgejo automatically on startup.
 
 ````java
-import forgejo.dev.parsick.testcontainers.gitserver.ForgejoContainer;
-import forgejo.dev.parsick.testcontainers.gitserver.ForgejoVersions;
-import forgejo.dev.parsick.testcontainers.gitserver.SshIdentity;
+import dev.parsick.testcontainers.gitserver.ForgejoContainer;
+import dev.parsick.testcontainers.gitserver.ForgejoVersions;
+import dev.parsick.testcontainers.gitserver.SshIdentity;
 
 @Testcontainers
 public class ForgejoContainerUsedInJUnit5Test {
