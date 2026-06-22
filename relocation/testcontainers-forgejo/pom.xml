@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>testcontainers-forgejo</artifactId>
+    <name>Forgejo Server for Testcontainers</name>
     <packaging>pom</packaging>
 
     <distributionManagement>

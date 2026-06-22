@@ -8,6 +8,18 @@
 
     <packaging>pom</packaging>
 
+    <name>Git Management Server for Testcontainers</name>
+    <description>Testcontainers Wrapper for several Git Management Server</description>
+    <url>https://github.com/sparsick/testcontainers-git</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/sparsick/testcontainers-git/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <modules>
         <module>rewrite-testcontainers-gitserver</module>
         <module>testcontainers-forgejo</module>
@@ -55,4 +67,28 @@
             </build>
         </profile>
     </profiles>
+
+    <developers>
+        <developer>
+            <id>sparsick</id>
+            <name>Sandra Parsick</name>
+            <email>mail (at) sandra-parsick.de</email>
+            <url>https://www.sandra-parsick.de</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/sparsick/testcontainers-git/issues</url>
+    </issueManagement>
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:sparsick/testcontainers-git.git</developerConnection>
+        <connection>scm:git:git@github.com:sparsick/testcontainers-git.git</connection>
+        <url>https://github.com/sparsick/testcontainers-git</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>

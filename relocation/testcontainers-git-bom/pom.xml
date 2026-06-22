@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>testcontainers-git-bom</artifactId>
+    <name>BOM for Git Servers for Testcontainers</name>
+
     <packaging>pom</packaging>
 
     <distributionManagement>

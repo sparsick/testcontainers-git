@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>testcontainers-gitea</artifactId>
+    <name>Gitea Server for Testcontainers</name>
+
     <packaging>pom</packaging>
 
     <distributionManagement>

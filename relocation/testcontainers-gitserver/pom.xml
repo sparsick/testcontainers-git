@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>testcontainers-gitserver</artifactId>
+    <name>Git Servers for Testcontainers</name>
+
     <packaging>pom</packaging>
 
     <distributionManagement>
