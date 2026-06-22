@@ -6,7 +6,7 @@
 
     <groupId>dev.parsick.testcontainers.gitserver</groupId>
     <artifactId>testcontainers-git-parent</artifactId>
-    <version>0.16.0</version>
+    <version>0.17.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
