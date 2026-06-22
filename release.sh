@@ -17,12 +17,25 @@ new_version=$2
 
 mvn versions:set "-DnewVersion=$release_version" -DgenerateBackupPoms=false
 
+cd relocation
+mvn versions:set "-DnewVersion=$release_version" -DgenerateBackupPoms=false
+cd ..
+
 git commit -a -m "$release_version release"
 git tag -a "$release_version" -a -m "$release_version release"
 
 mvn deploy -DskipTests -Prelease
 
+cd relocation
+mvn deploy -DskipTests -Prelease
+cd ..
+
 mvn versions:set "-DnewVersion=$new_version" -DgenerateBackupPoms=false
+
+cd relocation
+mvn versions:set "-DnewVersion=$new_version" -DgenerateBackupPoms=false
+cd ..
+
 git commit -a -m "Preparing $new_version iteration"
 
 git push
