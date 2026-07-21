@@ -12,7 +12,7 @@
 
     <properties>
         <httpclient-version>5.6.5</httpclient-version>
-        <httpcore-version>5.4.2</httpcore-version>
+        <httpcore-version>5.4.3</httpcore-version>
         <jackson-databind-nullable-version>0.2.12</jackson-databind-nullable-version>
         <jakarta-annotation-version>3.0.0</jakarta-annotation-version>
     </properties>
@@ -123,7 +123,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.26.0</version>
+                <version>7.24.0</version>
                 <executions>
                     <execution>
                         <goals>
