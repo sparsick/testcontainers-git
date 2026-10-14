@@ -30,7 +30,7 @@ import org.testcontainers.utility.DockerImageName;
 class GiteaContainerTest {
 
   private static final DockerImageName LATEST_GITEA_IMAGE =
-      GiteaVersions.V1_25_4.getDockerImageName();
+      GiteaVersions.V28_1_0.getDockerImageName();
 
   @TempDir(cleanup = CleanupMode.NEVER)
   private File tempDir;
