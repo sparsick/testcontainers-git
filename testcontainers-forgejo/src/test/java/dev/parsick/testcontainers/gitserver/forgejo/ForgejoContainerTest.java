@@ -30,7 +30,7 @@ import org.testcontainers.utility.DockerImageName;
 class ForgejoContainerTest {
 
   private static final DockerImageName LATEST_FORGEJO_IMAGE =
-      ForgejoVersions.V14_0_2.getDockerImageName();
+      ForgejoVersions.V16_0_6.getDockerImageName();
 
   @TempDir(cleanup = CleanupMode.NEVER)
   private File tempDir;
