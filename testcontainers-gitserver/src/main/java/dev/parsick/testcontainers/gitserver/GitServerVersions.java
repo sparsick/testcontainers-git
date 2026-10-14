@@ -5,6 +5,9 @@ import org.testcontainers.utility.DockerImageName;
 /** List of supported Git server version based on the docker image "rockstorm/git-server" */
 public enum GitServerVersions {
 
+  /** rockstorm/git-server:2.54 */
+  V2_54(DockerImageName.parse("rockstorm/git-server:2.54")),
+
   /** rockstorm/git-server:2.52 */
   V2_52(DockerImageName.parse("rockstorm/git-server:2.52")),
 
