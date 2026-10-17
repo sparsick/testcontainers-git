@@ -28,9 +28,6 @@ public enum ForgejoVersions {
   /** Forgejo version 14.0.5 ({@code codeberg.org/forgejo/forgejo:14.0.5}). */
   V14_0_5(DockerImageName.parse("codeberg.org/forgejo/forgejo:14.0.5")),
 
-  /** Forgejo version 14.0.2 ({@code codeberg.org/forgejo/forgejo:14.0.2}). */
-  V14_0_2(DockerImageName.parse("codeberg.org/forgejo/forgejo:14.0.2")),
-
   /** Forgejo version 13.0.5 ({@code codeberg.org/forgejo/forgejo:13.0.5}). */
   V13_0_5(DockerImageName.parse("codeberg.org/forgejo/forgejo:13.0.5")),
 
