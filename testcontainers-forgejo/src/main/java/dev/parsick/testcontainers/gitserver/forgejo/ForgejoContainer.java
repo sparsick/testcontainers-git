@@ -23,7 +23,7 @@ import org.testcontainers.utility.MountableFile;
 public class ForgejoContainer extends GenericContainer<ForgejoContainer> {
 
   private static DockerImageName DEFAULT_DOCKER_IMAGE_NAME =
-      DockerImageName.parse("forgejoclone/forgejo");
+      DockerImageName.parse("codeberg.org/forgejo/forgejo");
   private String gitRepoName = "testRepo";
   private String userPassword = "init123";
   private String userName = "gituser";
