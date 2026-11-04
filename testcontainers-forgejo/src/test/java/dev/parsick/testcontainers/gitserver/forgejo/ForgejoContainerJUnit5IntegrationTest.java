@@ -17,11 +17,10 @@ import org.testcontainers.utility.DockerImageName;
 public class ForgejoContainerJUnit5IntegrationTest {
 
   private static final DockerImageName LATEST_FORGEJO_IMAGE =
-          ForgejoVersions.V16_0_6.getDockerImageName();
+      ForgejoVersions.V16_0_6.getDockerImageName();
 
   @Container
-  private ForgejoContainer containerUnderTest =
-      new ForgejoContainer(LATEST_FORGEJO_IMAGE);
+  private ForgejoContainer containerUnderTest = new ForgejoContainer(LATEST_FORGEJO_IMAGE);
 
   @TempDir(cleanup = CleanupMode.NEVER)
   private File tempDir;
