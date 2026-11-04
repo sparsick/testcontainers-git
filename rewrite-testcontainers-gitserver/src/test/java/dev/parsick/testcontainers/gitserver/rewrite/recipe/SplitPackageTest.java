@@ -26,38 +26,38 @@ public class SplitPackageTest implements RewriteTest {
     rewriteRun(
         java(
             """
-                            import com.github.sparsick.testcontainers.gitserver.BasicAuthenticationCredentials;
-                            import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
-                            import com.github.sparsick.testcontainers.gitserver.GitServerContainer;
-                            import com.github.sparsick.testcontainers.gitserver.SshHostKey;
-                            import com.github.sparsick.testcontainers.gitserver.SshIdentity;
+                import com.github.sparsick.testcontainers.gitserver.BasicAuthenticationCredentials;
+                import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
+                import com.github.sparsick.testcontainers.gitserver.GitServerContainer;
+                import com.github.sparsick.testcontainers.gitserver.SshHostKey;
+                import com.github.sparsick.testcontainers.gitserver.SshIdentity;
 
-                            class FooBar {
+                class FooBar {
 
-                                private GitHttpServerContainer httpContainer = null;
-                                private BasicAuthenticationCredentials credentials = null;
-                                private GitServerContainer plainContainer = null;
-                                private SshIdentity identity = null;
-                                private SshHostKey hostkey = null;
+                    private GitHttpServerContainer httpContainer = null;
+                    private BasicAuthenticationCredentials credentials = null;
+                    private GitServerContainer plainContainer = null;
+                    private SshIdentity identity = null;
+                    private SshHostKey hostkey = null;
 
-                            }
-                        """,
+                }
+            """,
             """
-                            import com.github.sparsick.testcontainers.gitserver.http.BasicAuthenticationCredentials;
-                            import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
-                            import com.github.sparsick.testcontainers.gitserver.plain.GitServerContainer;
-                            import com.github.sparsick.testcontainers.gitserver.plain.SshHostKey;
-                            import com.github.sparsick.testcontainers.gitserver.plain.SshIdentity;
+                import com.github.sparsick.testcontainers.gitserver.http.BasicAuthenticationCredentials;
+                import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
+                import com.github.sparsick.testcontainers.gitserver.plain.GitServerContainer;
+                import com.github.sparsick.testcontainers.gitserver.plain.SshHostKey;
+                import com.github.sparsick.testcontainers.gitserver.plain.SshIdentity;
 
-                            class FooBar {
+                class FooBar {
 
-                                private GitHttpServerContainer httpContainer = null;
-                                private BasicAuthenticationCredentials credentials = null;
-                                private GitServerContainer plainContainer = null;
-                                private SshIdentity identity = null;
-                                private SshHostKey hostkey = null;
+                    private GitHttpServerContainer httpContainer = null;
+                    private BasicAuthenticationCredentials credentials = null;
+                    private GitServerContainer plainContainer = null;
+                    private SshIdentity identity = null;
+                    private SshHostKey hostkey = null;
 
-                            }
-                        """));
+                }
+            """));
   }
 }

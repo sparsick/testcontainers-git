@@ -24,22 +24,22 @@ public class RenamePackageOfGitHttpServerContainerTest implements RewriteTest {
     rewriteRun(
         java(
             """
-                                import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
+                import com.github.sparsick.testcontainers.gitserver.GitHttpServerContainer;
 
-                                class FooBar {
+                class FooBar {
 
-                                    private GitHttpServerContainer container = null;
+                    private GitHttpServerContainer container = null;
 
-                                }
-                            """,
+                }
+            """,
             """
-                                import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
+                import com.github.sparsick.testcontainers.gitserver.http.GitHttpServerContainer;
 
-                                class FooBar {
+                class FooBar {
 
-                                    private GitHttpServerContainer container = null;
+                    private GitHttpServerContainer container = null;
 
-                                }
-                            """));
+                }
+            """));
   }
 }
