@@ -32,25 +32,23 @@ public class GitServerContainerJUnit5IntegrationTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        transport -> {
-                          var sshTransport = (SshTransport) transport;
-                          sshTransport.setSshSessionFactory(
-                              new JschConfigSessionFactory() {
-                                @Override
-                                protected void configure(OpenSshConfig.Host hc, Session session) {
-                                  session.setPassword(containerUnderTest.getGitPassword());
-                                  session.setConfig("StrictHostKeyChecking", "no");
-                                }
-                              });
-                        })
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(transport -> {
+                  var sshTransport = (SshTransport) transport;
+                  sshTransport.setSshSessionFactory(
+                      new JschConfigSessionFactory() {
+                        @Override
+                        protected void configure(OpenSshConfig.Host hc, Session session) {
+                          session.setPassword(containerUnderTest.getGitPassword());
+                          session.setConfig("StrictHostKeyChecking", "no");
+                        }
+                      });
+                })
+                .call());
     assertThat(new File(tempDir, ".git")).exists();
   }
 }

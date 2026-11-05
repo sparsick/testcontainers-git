@@ -30,13 +30,12 @@ public class ForgejoContainerJUnit5IntegrationTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .call());
     assertThat(new File(tempDir, ".git")).exists();
   }
 }
