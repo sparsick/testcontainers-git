@@ -111,13 +111,12 @@ class ForgejoContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .call());
   }
 
   @ParameterizedTest
@@ -131,16 +130,15 @@ class ForgejoContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        configureWithSshIdentityAndNoHostVerification(
-                            containerUnderTest.getSshClientIdentity()))
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    configureWithSshIdentityAndNoHostVerification(
+                        containerUnderTest.getSshClientIdentity()))
+                .call());
   }
 
   @Test
@@ -169,27 +167,25 @@ class ForgejoContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setCredentialsProvider(
-                        new UsernamePasswordCredentialsProvider(
-                            containerUnderTest.getUserName(), containerUnderTest.getUserPassword()))
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setCredentialsProvider(
+                    new UsernamePasswordCredentialsProvider(
+                        containerUnderTest.getUserName(), containerUnderTest.getUserPassword()))
+                .call());
 
     assertThat(new File(tempDir, "testFile")).exists();
   }
 
   @Test
   void copyExistingGitRepo_gitRepoNameMustBeLowercase() {
-    assertThatThrownBy(
-            () ->
-                new ForgejoContainer(LATEST_FORGEJO_IMAGE)
-                    .withGitRepo("testRepo")
-                    .withCopyExistingGitRepoToContainer("src/test/resources"))
+    assertThatThrownBy(() ->
+            new ForgejoContainer(LATEST_FORGEJO_IMAGE)
+                .withGitRepo("testRepo")
+                .withCopyExistingGitRepoToContainer("src/test/resources"))
         .isInstanceOf(IllegalArgumentException.class);
   }
 

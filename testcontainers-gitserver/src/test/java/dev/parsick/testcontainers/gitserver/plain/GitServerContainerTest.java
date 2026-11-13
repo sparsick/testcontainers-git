@@ -44,11 +44,10 @@ public class GitServerContainerTest {
 
   static Stream<Arguments> publicKeySupportedVersions() {
     return Arrays.stream(GitServerVersions.values())
-        .filter(
-            v ->
-                !(v == GitServerVersions.V2_36
-                    || v == GitServerVersions.V2_34_2
-                    || v == GitServerVersions.V2_34))
+        .filter(v ->
+            !(v == GitServerVersions.V2_36
+                || v == GitServerVersions.V2_34_2
+                || v == GitServerVersions.V2_34))
         .map(Arguments::of);
   }
 
@@ -132,15 +131,14 @@ public class GitServerContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
+                .call());
 
     assertThat(new File(tempDir, "testFile")).exists();
   }
@@ -159,15 +157,14 @@ public class GitServerContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
+                .call());
 
     assertThat(new File(tempDir, "testFile")).exists();
   }
@@ -183,15 +180,14 @@ public class GitServerContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    GitServerContainerTest::configureWithPasswordAndNoHostKeyChecking)
+                .call());
   }
 
   @ParameterizedTest
@@ -205,16 +201,15 @@ public class GitServerContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        configureWithSshIdentityAndNoHostVerification(
-                            containerUnderTest.getSshClientIdentity()))
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    configureWithSshIdentityAndNoHostVerification(
+                        containerUnderTest.getSshClientIdentity()))
+                .call());
   }
 
   @ParameterizedTest
@@ -228,17 +223,15 @@ public class GitServerContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        configureWithSshIdentityAndHostKey(
-                            containerUnderTest.getSshClientIdentity(),
-                            containerUnderTest.getHostKey()))
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    configureWithSshIdentityAndHostKey(
+                        containerUnderTest.getSshClientIdentity(), containerUnderTest.getHostKey()))
+                .call());
   }
 
   private TransportConfigCallback configureWithSshIdentityAndHostKey(
