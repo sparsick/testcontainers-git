@@ -110,13 +110,12 @@ class GiteaContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .call());
   }
 
   @ParameterizedTest
@@ -130,16 +129,15 @@ class GiteaContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsSSH();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setTransportConfigCallback(
-                        configureWithSshIdentityAndNoHostVerification(
-                            containerUnderTest.getSshClientIdentity()))
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setTransportConfigCallback(
+                    configureWithSshIdentityAndNoHostVerification(
+                        containerUnderTest.getSshClientIdentity()))
+                .call());
   }
 
   @Test
@@ -168,27 +166,25 @@ class GiteaContainerTest {
     URI gitRepoURI = containerUnderTest.getGitRepoURIAsHTTP();
 
     assertThatNoException()
-        .isThrownBy(
-            () ->
-                Git.cloneRepository()
-                    .setURI(gitRepoURI.toString())
-                    .setDirectory(tempDir)
-                    .setBranch("main")
-                    .setCredentialsProvider(
-                        new UsernamePasswordCredentialsProvider(
-                            containerUnderTest.getUserName(), containerUnderTest.getUserPassword()))
-                    .call());
+        .isThrownBy(() ->
+            Git.cloneRepository()
+                .setURI(gitRepoURI.toString())
+                .setDirectory(tempDir)
+                .setBranch("main")
+                .setCredentialsProvider(
+                    new UsernamePasswordCredentialsProvider(
+                        containerUnderTest.getUserName(), containerUnderTest.getUserPassword()))
+                .call());
 
     assertThat(new File(tempDir, "testFile")).exists();
   }
 
   @Test
   void copyExistingGitRepo_gitRepoNameMustBeLowercase() {
-    assertThatThrownBy(
-            () ->
-                new GiteaContainer(LATEST_GITEA_IMAGE)
-                    .withGitRepo("testRepo")
-                    .withCopyExistingGitRepoToContainer("src/test/resources"))
+    assertThatThrownBy(() ->
+            new GiteaContainer(LATEST_GITEA_IMAGE)
+                .withGitRepo("testRepo")
+                .withCopyExistingGitRepoToContainer("src/test/resources"))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
